@@ -1,6 +1,8 @@
-import RepeatField from "./components/repeat-field";
-import RotateField from "./components/rotate-field";
-import SliderField from "./components/slider-field";
+
+import MinWidthField from "./components/MinWidthField";
+import RepeatField from "./components/RepeatField";
+import RotateField from "./components/RotateField";
+import SliderField from "./components/SliderField";
 
 function App() {
   return (
@@ -8,6 +10,7 @@ function App() {
       <SliderField/>
       <RepeatField />
       <RotateField />
+      <MinWidthField/>
     </div>
   );
 }

@@ -39,7 +39,7 @@ const RotateField = ({
             </button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Adjust scale value</p>
+            <p>Adjust Rotate value</p>
           </TooltipContent>
         </Tooltip>
       </div>

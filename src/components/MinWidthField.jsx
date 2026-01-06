@@ -5,8 +5,9 @@ import { Delete01Icon, InformationCircleIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
 
-const RepeatField = ({
-  label = "Repeat",
+
+const MinWidthField = ({
+  label = "MinWidth",
   defaultValue = 0,
   min = 0,
   max = 100,
@@ -27,7 +28,7 @@ const RepeatField = ({
             </button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Give a custom Repeat value</p>
+            <p>Give a MinWidth value</p>
           </TooltipContent>
         </Tooltip>
       </div>
@@ -60,4 +61,4 @@ const RepeatField = ({
   );
 };
 
-export default RepeatField;
+export default MinWidthField
