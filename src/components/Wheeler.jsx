@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-const Wheeler = ({ min, max, value, size = 80, onChange }) => {
+const Wheeler = ({ min, max, value, size = 70, onChange }) => {
   const wheelRef = useRef(null);
   const draggingRef = useRef(false);
 
@@ -13,8 +13,8 @@ const Wheeler = ({ min, max, value, size = 80, onChange }) => {
 
   // Sync wheel when input changes
   useEffect(() => {
-    setAngle(valueToAngle(value))
-  }, [value])
+    setAngle(valueToAngle(value));
+  }, [value]);
 
   // Mouse drag
   useEffect(() => {
@@ -57,7 +57,8 @@ const Wheeler = ({ min, max, value, size = 80, onChange }) => {
 
   return (
     <div
-    ref={wheelRef}
+      ref={wheelRef}
+      onMouseDown={() => (draggingRef.current = true)}
       className="relative flex items-center justify-center rounded-full select-none"
       style={{ width: size, height: size }}
     >
@@ -67,7 +68,7 @@ const Wheeler = ({ min, max, value, size = 80, onChange }) => {
       {/* Inner face */}
       <div className="absolute inset-2.5 rounded-full bg-[#444447]" />
 
-      {/* Tick marks */} 
+      {/* Tick marks */}
       {/* <div className="absolute inset-0">
         {[...Array(8)].map((_, i) => (
           <div
@@ -82,17 +83,15 @@ const Wheeler = ({ min, max, value, size = 80, onChange }) => {
       </div> */}
 
       {/* Needle */}
-        <div
-          
-          onMouseDown={() => (draggingRef.current = true)}
-          className="absolute left-[48%] top-1/2 h-[35%] w-1 cursor-pointer bg-gray-500 transition-transform duration-75"
-          style={{
-            transform: `rotate(${angle - 180}deg)`,
-            transformOrigin: "center top",
-          }}
-        />
+      <div
+        className="absolute left-[47%] top-1/2 h-[32%] w-1 cursor-pointer bg-gray-500 transition-transform duration-75"
+        style={{
+          transform: `rotate(${angle - 180}deg)`,
+          transformOrigin: "center top",
+        }}
+      />
 
-        {/* <div className="w-2.5 h-2.5 rounded-full absolute left-[44%] top-1 bg-[#302c2c]"></div>
+      {/* <div className="w-2.5 h-2.5 rounded-full absolute left-[44%] top-1 bg-[#302c2c]"></div>
        */}
 
       {/* Center pivot */}

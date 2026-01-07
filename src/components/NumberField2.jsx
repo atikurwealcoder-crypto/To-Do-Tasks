@@ -15,7 +15,7 @@ const NumberField2 = ({
   config = {
     min: 0,
     max: 100,
-    step:0.1,
+    step: 0.1,
     defaultValue: 0,
   },
   isRequired = false,
@@ -24,14 +24,13 @@ const NumberField2 = ({
   const [value, setValue] = useState(config.defaultValue);
   const [isDataValid, setIsDataValid] = useState(false);
 
-    // keep precision safe
-  const round = (num) =>
-    Math.round(num * 100) / 100
+  // keep precision safe
+  const round = (num) => Math.round(num * 100) / 100;
 
   const updateValue = (next) => {
-    const clamped = Math.min(config.max, Math.max(config.min, next))
+    const clamped = Math.min(config.max, Math.max(config.min, next));
     setValue(round(clamped));
-  }
+  };
 
   return (
     <div className="p-2">
@@ -55,38 +54,42 @@ const NumberField2 = ({
         </div>
 
         {/* right add + delete button */}
-        <div className="flex items-center gap-2 relative">
-          <Input
-            placeholder="Add Value"
-            className="flex items-center justify-center w-62.5"
-            value={value}
-            min={config.min}
-            max={config.max}
-            step={config.step}
-            type="number"
-            onChange={(e) => {
-              const value = e.target.value;
-              setValue(value);
-            }}
-          />
+        <div className="flex items-center gap-2 ">
+          <div className="relative">
+            <Input
+              placeholder="Add Value"
+              className="flex items-center justify-center w-62.5"
+              value={value}
+              min={config.min}
+              max={config.max}
+              step={config.step}
+              type="number"
+              onChange={(e) => {
+                const value = e.target.value;
+                setValue(value);
+              }}
+            />
+            {/* plus - minus icon */}
+            <div className="flex items-center justify-center absolute right-2 top-1 bg-[#52525B] h-6 rounded-sm">
+              <Button
+                size="icon"
+                onClick={() => updateValue(value - config.step)}
+              >
+                <HugeiconsIcon
+                  icon={MinusSignIcon}
+                  className="text-[#E4E4E7]"
+                />
+              </Button>
+              <div className="w-px h-6 bg-[#71717A]" />
 
-          {/* plus - minus icon */}
-          <div className="flex items-center justify-center absolute right-2 top-1 bg-[#52525B] h-6 rounded-sm">
-          <Button
-            size="icon"
-            onClick={() => updateValue(value - config.step)}
-          >
-            <HugeiconsIcon icon={MinusSignIcon} className="text-[#E4E4E7]"/>
-          </Button>
-          <div className="w-px h-6 bg-[#71717A]"/>
-
-          <Button
-            size="icon"             
-            onClick={() => updateValue(value + config.step)}
-          >
-            <HugeiconsIcon icon={PlusSignIcon} className="text-[#E4E4E7]"/>
-          </Button>
-        </div>
+              <Button
+                size="icon"
+                onClick={() => updateValue(value + config.step)}
+              >
+                <HugeiconsIcon icon={PlusSignIcon} className="text-[#E4E4E7]" />
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
