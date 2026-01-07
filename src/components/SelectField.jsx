@@ -3,11 +3,18 @@ import {
   NativeSelect,
   NativeSelectOption,
 } from "@/components/ui/native-select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { InformationCircleIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-const MethodSelectField = ({
+const SelectField = ({
   label = "Method",
   tooltipContent = "Select Method",
   isRequired = false,
@@ -38,13 +45,23 @@ const MethodSelectField = ({
         </div>
 
         {/* right add + delete button */}
-        <NativeSelect className="w-52">
+        {/* <NativeSelect className="w-52 text-[#A1A1AA]">
           <NativeSelectOption value="">Select Method</NativeSelectOption>
-          <NativeSelectOption value="apple">Apple</NativeSelectOption>
-          <NativeSelectOption value="banana">Banana</NativeSelectOption>
-          <NativeSelectOption value="blueberry">Blueberry</NativeSelectOption>
-          <NativeSelectOption value="pineapple">Pineapple</NativeSelectOption>
-        </NativeSelect>
+          <NativeSelectOption value="to">To</NativeSelectOption>
+          <NativeSelectOption value="from">From</NativeSelectOption>
+          <NativeSelectOption value="set">Set</NativeSelectOption>
+        </NativeSelect> */}
+
+        <Select>
+          <SelectTrigger className="w-62.75">
+            <SelectValue placeholder="Select Method" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="to">To</SelectItem>
+            <SelectItem value="from">From</SelectItem>
+            <SelectItem value="set">Set</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div>
         <p>{isRequired && "Field is Required"}</p>
@@ -52,4 +69,4 @@ const MethodSelectField = ({
     </div>
   );
 };
-export default MethodSelectField;
+export default SelectField;

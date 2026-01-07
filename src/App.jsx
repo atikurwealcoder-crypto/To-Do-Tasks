@@ -1,8 +1,9 @@
-import MethodSelectField from "./components/MethodSelectField";
 import NumberField from "./components/NumberField";
 import RepeatField from "./components/RepeatField";
 import RotationField from "./components/RotationField";
+import SelectField from "./components/SelectField";
 import SliderField from "./components/SliderField";
+import TextField from "./components/TextField";
 
 function App() {
   return (
@@ -10,8 +11,9 @@ function App() {
       <SliderField />
       <RepeatField />
       <RotationField />
-      <NumberField/>
-      <MethodSelectField />
+      <NumberField />
+      <SelectField />
+      <TextField />
     </div>
   );
 }
