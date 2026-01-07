@@ -8,25 +8,25 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
 
-const RepeatField = ({
-  label = "Repeat",
-  tooltipContent = "Repeat Value",
-  config = {
+const NumberField = ({
+  label = "MinWidth",
+  tooltipContent = "MinWidth Value",
+  config = { 
     min: 0,
-    max: 100,
-    defaultValue: 0,
+    max: 100, 
+    defaultValue: 0 
   },
+  onDelete,
   isRequired = false,
   isValid = () => {},
-  onDelete,
   isCustomAnim = true,
 }) => {
   const [value, setValue] = useState(config.defaultValue);
   const [isDataValid, setIsDataValid] = useState(false);
 
   return (
-    <div>
-      <div className="flex flex-col justify-between gap-3 rounded-lg p-4 sm:flex-row sm:items-center">
+    <div className="p-4">
+      <div className="flex flex-col justify-between gap-3 rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
           <h2 className="text-white text-sm">{label}</h2>
@@ -77,4 +77,4 @@ const RepeatField = ({
   );
 };
 
-export default RepeatField;
+export default NumberField;

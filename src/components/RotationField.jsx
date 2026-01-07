@@ -5,15 +5,21 @@ import {
   Delete01Icon,
   InformationCircleIcon,
 } from "@hugeicons/core-free-icons";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
+import Wheeler from "./Wheeler";
 
-const RepeatField = ({
-  label = "Repeat",
-  tooltipContent = "Repeat Value",
+const RotationField = ({
+  label = "Rotate",
+  tooltipContent = "Adjust Rotate Value",
   config = {
     min: 0,
-    max: 100,
+    max: 360,
     defaultValue: 0,
   },
   isRequired = false,
@@ -47,6 +53,24 @@ const RepeatField = ({
 
         {/* right add + delete button */}
         <div className="flex items-center gap-2">
+          {/* knob wheeler icon */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className="relative flex items-center justify-center rounded-full bg-[#A1A1AA] shadow-sm w-5 h-5">
+                {/* Indicator line */}
+                <div className="absolute top-1 h-2 w-0.5 rounded bg-primary" />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Wheeler
+                min={config.min}
+                max={config.max}
+                value={value}
+                onChange={setValue}
+              />
+            </PopoverContent>
+          </Popover>
+
           <Input
             placeholder="Add Value"
             className="flex items-center justify-center w-28"
@@ -60,7 +84,7 @@ const RepeatField = ({
             }}
           />
           {isCustomAnim && (
-            <Button size="icon">
+            <Button>
               <HugeiconsIcon
                 icon={Delete01Icon}
                 onClick={onDelete}
@@ -77,4 +101,4 @@ const RepeatField = ({
   );
 };
 
-export default RepeatField;
+export default RotationField;
