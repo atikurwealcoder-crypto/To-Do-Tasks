@@ -25,8 +25,8 @@ const RepeatField = ({
   const [isDataValid, setIsDataValid] = useState(false);
 
   return (
-    <div>
-      <div className="flex flex-col justify-between gap-3 rounded-lg p-4 sm:flex-row sm:items-center">
+    <div className="p-2">
+      <div className="flex flex-col justify-between gap-3 rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
           <h2 className="text-white text-sm">{label}</h2>
@@ -70,8 +70,9 @@ const RepeatField = ({
           )}
         </div>
       </div>
+      {/* required message */}
       <div>
-        <p>{isRequired && "Field is Required"}</p>
+        <p className="text-white text-sm">{isRequired && "Field is Required"}</p>
       </div>
     </div>
   );

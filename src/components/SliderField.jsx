@@ -40,7 +40,7 @@ const SliderField = ({
   }, [value, config.delay, onValueChange]);
 
   return (
-    <div className="p-4">
+    <div className="p-2">
       <div className="flex flex-col gap-3 rounded-lg  sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
@@ -97,8 +97,9 @@ const SliderField = ({
           )}
         </div>
       </div>
+      {/* required message */}
       <div>
-        <p>{isRequired && "Field is Required"}</p>
+        <p className="text-white text-sm">{isRequired && "Field is Required"}</p>
       </div>
     </div>
   );
