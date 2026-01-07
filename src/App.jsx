@@ -1,5 +1,6 @@
 import ClassSelectionField from "./components/ClassSelectionField";
 import NumberField from "./components/NumberField";
+import NumberField2 from "./components/NumberField2";
 import RepeatField from "./components/RepeatField";
 import RotationField from "./components/RotationField";
 import SelectField from "./components/SelectField";
@@ -18,6 +19,7 @@ function App() {
       <TextField />
       <SwitchField />
       <ClassSelectionField />
+      <NumberField2 />
     </div>
   );
 }
