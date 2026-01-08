@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Input } from "./ui/input";
 import {
@@ -7,22 +7,35 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
+import { debounceFn } from "../lib/utils";
 
 const NumberField = ({
   label = "MinWidth",
   tooltipContent = "MinWidth Value",
   config = {
     min: 0,
-    max: 100,
-    defaultValue: 0,
+    max: 0,
   },
   onDelete,
   isRequired = false,
   isValid = () => {},
+  onUpdateValue = () => {},
   isCustomAnim = true,
 }) => {
-  const [value, setValue] = useState(config.defaultValue);
+  const [inputValue, setInputValue] = useState(0);
   const [isDataValid, setIsDataValid] = useState(false);
+
+  const handleInput = debounceFn((rewValue) => {
+    if (rewValue === "" || rewValue === "-") return;
+
+    let currentValue = Number(rewValue);
+    if (isNaN(currentValue)) return;
+    if (currentValue < config.min) currentValue = config.min;
+    if (currentValue > config.max) currentValue = config.max;
+
+    setInputValue(currentValue);
+    onUpdateValue(currentValue);
+  }, 150);
 
   return (
     <div className="p-2">
@@ -50,13 +63,14 @@ const NumberField = ({
           <Input
             placeholder="Add Value"
             className="flex items-center justify-center w-28"
-            value={value}
+            value={inputValue}
             min={config.min}
             max={config.max}
             type="number"
             onChange={(e) => {
               const value = e.target.value;
-              setValue(value);
+              setInputValue(value);
+              handleInput(value);
             }}
           />
           {isCustomAnim && (
@@ -70,7 +84,7 @@ const NumberField = ({
           )}
         </div>
       </div>
-      
+
       {/* required message */}
       <div>
         <p className="text-white text-sm">

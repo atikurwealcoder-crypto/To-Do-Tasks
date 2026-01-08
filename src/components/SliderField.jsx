@@ -8,36 +8,36 @@ import {
   InformationCircleIcon,
 } from "@hugeicons/core-free-icons";
 import { Button } from "./ui/button";
+import { debounceFn } from "../lib/utils";
 
 const SliderField = ({
   label = "Scale",
   tooltipContent = "Adjust scale value",
   config = {
     min: 0,
-    max: 100,
+    max: 0,
     step: 1,
-    defaultValue: 0,
-    delay: 500,
   },
   isRequired = false,
   isValid=()=>{},
-  onValueChange,
+  onUpdateValue = () => {},
   onDelete,
   isCustomAnim = true,
 }) => {
-  const [value, setValue] = useState(config.defaultValue);
+  const [inputValue, setInputValue] = useState(0);
   const [isDataValid, setIsDataValid]=useState(false);
 
-  // Debounce handler
-  useEffect(() => {
-    if (value === "") return;
-
-    const timer = setTimeout(() => {
-      onValueChange?.(+value);
-    }, config.delay);
-
-    return () => clearTimeout(timer);
-  }, [value, config.delay, onValueChange]);
+  // input handler
+ const handleInput = debounceFn((rewValue) => {
+     if (rewValue === "" || rewValue === "-") return;
+ 
+     let currentValue = Number(rewValue);
+     if (isNaN(currentValue)) return;
+     if (currentValue < config.min) currentValue = config.min;
+     if (currentValue > config.max) currentValue = config.max;
+     setInputValue(currentValue);
+     onUpdateValue(currentValue);
+   }, 150);
 
   return (
     <div className="p-2">
@@ -63,11 +63,11 @@ const SliderField = ({
         {/* middle slider */}
         <div className="flex-1">
           <Slider
-            value={[value]}
+            value={[inputValue]}
             min={config.min}
             max={config.max}
             step={config.step}
-            onValueChange={(v) => setValue(v[0])}
+            onValueChange={(v) => setInputValue(v[0])}
             className="flex-1"
           />
         </div>
@@ -77,13 +77,14 @@ const SliderField = ({
           <Input
             placeholder="Add Value"
             className="flex items-center justify-center w-28"
-            value={value}
+            value={inputValue}
             min={config.min}
             max={config.max}
             type="number"
-            onChange={(e) => {
+             onChange={(e) => {
               const value = e.target.value;
-              setValue(value);
+              setInputValue(value);
+              handleInput(value);
             }}
           />
           {isCustomAnim && (

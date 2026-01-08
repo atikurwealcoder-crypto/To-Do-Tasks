@@ -20,14 +20,13 @@ const RotationField = ({
   config = {
     min: 0,
     max: 360,
-    defaultValue: 0,
   },
   isRequired = false,
   isValid = () => {},
   onDelete,
   isCustomAnim = true,
 }) => {
-  const [value, setValue] = useState(config.defaultValue);
+  const [value, setValue] = useState(0);
   const [isDataValid, setIsDataValid] = useState(false);
 
   return (
@@ -80,7 +79,7 @@ const RotationField = ({
             type="number"
             onChange={(e) => {
               const value = e.target.value;
-              setValue(value);
+              setValue(+value);
             }}
           />
           {isCustomAnim && (
@@ -96,7 +95,9 @@ const RotationField = ({
       </div>
       {/* required message */}
       <div>
-        <p className="text-white text-sm">{isRequired && "Field is Required"}</p>
+        <p className="text-white text-sm">
+          {isRequired && "Field is Required"}
+        </p>
       </div>
     </div>
   );

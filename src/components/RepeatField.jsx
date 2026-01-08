@@ -7,22 +7,34 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
+import { debounceFn } from "../lib/utils";
 
 const RepeatField = ({
   label = "Repeat",
   tooltipContent = "Repeat Value",
   config = {
     min: 0,
-    max: 100,
-    defaultValue: 0,
+    max: 0,
   },
   isRequired = false,
   isValid = () => {},
+  onUpdateValue = () => {},
   onDelete,
   isCustomAnim = true,
 }) => {
-  const [value, setValue] = useState(config.defaultValue);
+    const [inputValue, setInputValue] = useState(0);
   const [isDataValid, setIsDataValid] = useState(false);
+
+  const handleInput = debounceFn((rewValue) => {
+      if (rewValue === "" || rewValue === "-") return;
+  
+      let currentValue = Number(rewValue);
+      if (isNaN(currentValue)) return;
+      if (currentValue < config.min) currentValue = config.min;
+      if (currentValue > config.max) currentValue = config.max;
+      setInputValue(currentValue);
+      onUpdateValue(currentValue);
+    }, 150);
 
   return (
     <div className="p-2">
@@ -50,13 +62,14 @@ const RepeatField = ({
           <Input
             placeholder="Add Value"
             className="flex items-center justify-center w-28"
-            value={value}
+            value={inputValue}
             min={config.min}
             max={config.max}
             type="number"
             onChange={(e) => {
               const value = e.target.value;
-              setValue(value);
+              setInputValue(value);
+              handleInput(value);
             }}
           />
           {isCustomAnim && (

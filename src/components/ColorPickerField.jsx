@@ -18,11 +18,17 @@ export default function ColorPickerField({
   isCustomAnim = true,
 }) {
   const [color, setColor] = useState(config.defaultValue);
+  const [isValidColorCode, setIsValidColorCode]=useState("");
   const colorInputRef = useRef(null);
 
-//   validate hex (3 or 6 chars)
+
+  //   validate hex (3 or 6 chars)
   const isValidHex = (value) =>
     /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(value);
+
+   if(!isValid){
+    return setIsValidColorCode("Hex Color Code is not valid. Give a Valid Color Code")
+   } 
 
   return (
     <div className="p-2">
@@ -47,17 +53,15 @@ export default function ColorPickerField({
 
         {/* right input + delete button */}
         <div className="flex items-center gap-2">
-          {/* Controls */}
           <div className="flex items-center gap-2">
             {/* Hidden native color picker */}
-            <input
-              ref={colorInputRef}
-              type="color"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-              className="absolute h-0 w-0 opacity-1"
-            />
-
+              <input
+                ref={colorInputRef}
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="absolute h-0 w-0 opacity-0"
+              />
             {/* Color swatch button */}
             <Button
               type="button"
@@ -99,6 +103,7 @@ export default function ColorPickerField({
         <p className="text-white text-sm">
           {isRequired && "Field is Required"}
         </p>
+        <p>{isValidColorCode}</p>
       </div>
     </div>
   );

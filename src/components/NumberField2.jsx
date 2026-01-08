@@ -8,28 +8,47 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
+import { debounceFn } from "../lib/utils";
 
 const NumberField2 = ({
   label = "Delay",
   tooltipContent = "Delay sets a pause before starting the animation, e.g., 2 waits 2 seconds before animating",
   config = {
     min: 0,
-    max: 100,
+    max: 2,
     step: 0.1,
-    defaultValue: 0,
   },
   isRequired = false,
+  onUpdateValue = () => {},
   isValid = () => {},
 }) => {
-  const [value, setValue] = useState(config.defaultValue);
+  const [inputValue, setInputValue] = useState(0);
+  // console.log(inputValue)
   const [isDataValid, setIsDataValid] = useState(false);
 
-  // keep precision safe
-  const round = (num) => Math.round(num * 100) / 100;
+  const round = (value) => Math.round(value * 100) / 100;
 
-  const updateValue = (next) => {
-    const clamped = Math.min(config.max, Math.max(config.min, next));
-    setValue(round(clamped));
+  // value handler
+  const commitValue = (rawValue) => {
+    let updateValue = Number(rawValue);
+    if (Number.isNaN(updateValue)) return;
+
+    updateValue = Math.min(config.max, Math.max(config.min, updateValue));
+    updateValue = round(updateValue);
+
+    console.log(updateValue);
+    setInputValue(updateValue);
+    onUpdateValue(updateValue);
+  };
+
+// input handler
+  const handleInput = debounceFn((value) => {
+    commitValue(value);
+  }, 150);
+
+  // plus minus button click handler
+  const updateValue = (step) => {
+    commitValue(step);
   };
 
   return (
@@ -59,21 +78,22 @@ const NumberField2 = ({
             <Input
               placeholder="Add Value"
               className="flex items-center justify-center w-62.5"
-              value={value}
+              value={inputValue}
               min={config.min}
               max={config.max}
               step={config.step}
               type="number"
               onChange={(e) => {
                 const value = e.target.value;
-                setValue(value);
+                setInputValue(value);
+                handleInput(value);
               }}
             />
             {/* plus - minus icon */}
-            <div className="flex items-center justify-center absolute right-2 top-1 bg-[#52525B] h-6 rounded-sm">
+            <div className="flex items-center justify-center absolute right-2 top-1.25 bg-[#52525B] h-6 rounded-sm">
               <Button
                 size="icon"
-                onClick={() => updateValue(value - config.step)}
+                onClick={() => updateValue(inputValue - config.step)}
               >
                 <HugeiconsIcon
                   icon={MinusSignIcon}
@@ -84,7 +104,7 @@ const NumberField2 = ({
 
               <Button
                 size="icon"
-                onClick={() => updateValue(value + config.step)}
+                onClick={() => updateValue(inputValue + config.step)}
               >
                 <HugeiconsIcon icon={PlusSignIcon} className="text-[#E4E4E7]" />
               </Button>
