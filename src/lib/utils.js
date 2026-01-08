@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
-export const debounceFn = (mainFunction, delay = 300) => {
+export const debounceFn = (mainFunction, delay) => {
   let timer;
 
   return function (...args) {

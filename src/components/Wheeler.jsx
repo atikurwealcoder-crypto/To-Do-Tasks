@@ -1,66 +1,105 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
-const Wheeler = ({ min, max, value, size = 70, onChange }) => {
+const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+
+const Wheeler = ({
+  min = 0,
+  max = 0,
+  value = 0,
+  size = 70,
+  onChange = () => {},
+}) => {
   const wheelRef = useRef(null);
-  const draggingRef = useRef(false);
+  const isPointerDownRef = useRef(false);
 
-  // Convert value <-> angle
-  const valueToAngle = (v) => ((v - min) / (max - min)) * 360;
+  // Convert value <-> angle (0..360)
+  const valueToAngle = useCallback(
+    (v) => ((clamp(v, min, max) - min) / (max - min)) * 360,
+    [min, max]
+  );
 
-  const angleToValue = (a) => min + (a / 360) * (max - min);
+  const angleToValue = useCallback(
+    (a) => min + (a / 360) * (max - min),
+    [min, max]
+  );
 
-  const [angle, setAngle] = useState(valueToAngle(value));
+  const [angle, setAngle] = useState(() => valueToAngle(value));
 
-  // Sync wheel when input changes
+  // Keep wheel in sync when parent value changes
   useEffect(() => {
     setAngle(valueToAngle(value));
-  }, [value]);
+  }, [value, valueToAngle]);
 
-  // Mouse drag
-  useEffect(() => {
-    const handleMove = (e) => {
-      if (!draggingRef.current || !wheelRef.current) return;
+  // Core: pointer position -> angle -> value
+  const updateFromPointer = useCallback(
+    (clientX, clientY) => {
+      const el = wheelRef.current;
+      if (!el) return;
 
-      const rect = wheelRef.current.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
 
-      const rad = Math.atan2(e.clientY - cy, e.clientX - cx);
+      const rad = Math.atan2(clientY - cy, clientX - cx);
       const deg = (rad * 180) / Math.PI;
+
+      // Normalize to 0..360
       const normalized = (deg + 360) % 360;
 
       setAngle(normalized);
-      onChange(Math.round(angleToValue(normalized)));
-    };
 
-    const stop = () => (draggingRef.current = false);
+      const nextValue = angleToValue(normalized);
+      onChange(Math.round(nextValue));
+    },
+    [angleToValue, onChange]
+  );
 
-    window.addEventListener("mousemove", handleMove);
-    window.addEventListener("mouseup", stop);
+  const onPointerDown = useCallback(
+    (e) => {
+      // capture pointer so we keep receiving move events even if pointer leaves the wheel
+      e.preventDefault();
+      isPointerDownRef.current = true;
+      wheelRef.current?.setPointerCapture?.(e.pointerId);
 
-    return () => {
-      window.removeEventListener("mousemove", handleMove);
-      window.removeEventListener("mouseup", stop);
-    };
-  }, [min, max, onChange]);
+      // IMPORTANT: update immediately on click
+      updateFromPointer(e.clientX, e.clientY);
+    },
+    [updateFromPointer]
+  );
 
-  // Scroll wheel support
-  // const handleWheel = (e) => {
-  //   e.preventDefault()
+  const onPointerMove = useCallback(
+    (e) => {
+      if (!isPointerDownRef.current) return;
+      e.preventDefault();
+      updateFromPointer(e.clientX, e.clientY);
+    },
+    [updateFromPointer]
+  );
 
-  //   setAngle((prev) => {
-  //     const next = (prev - e.deltaY * 0.2 + 360) % 360
-  //     onChange(angleToValue(next))
-  //     return next
-  //   })
-  // }
+  const onPointerUp = useCallback((e) => {
+    e.preventDefault();
+    isPointerDownRef.current = false;
+    wheelRef.current?.releasePointerCapture?.(e.pointerId);
+  }, []);
 
   return (
     <div
       ref={wheelRef}
-      onMouseDown={() => (draggingRef.current = true)}
       className="relative flex items-center justify-center rounded-full select-none"
-      style={{ width: size, height: size }}
+      style={{
+        width: size,
+        height: size,
+        touchAction: "none",
+      }}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
     >
       {/* Outer ring */}
       <div className="absolute inset-0 rounded-full bg-[#757579] shadow-inner" />
@@ -68,39 +107,19 @@ const Wheeler = ({ min, max, value, size = 70, onChange }) => {
       {/* Inner face */}
       <div className="absolute inset-2.5 rounded-full bg-[#444447]" />
 
-      {/* Tick marks */}
-      {/* <div className="absolute inset-0">
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute left-1/2 top-0 h-2.5 w-0.5 bg-[#444447]"
-            style={{
-              transform: `rotate(${i * 45}deg) translateX(-50%)`,
-              transformOrigin: "center 40px",
-            }}
-          />
-        ))}
-      </div> */}
-
       {/* Needle */}
       <div
-        className="absolute left-[47%] top-1/2 h-[32%] w-1 cursor-pointer bg-gray-500 transition-transform duration-75"
+        className="absolute left-1/2 top-1/2 h-[32%] w-1 bg-gray-500 cursor-pointer"
         style={{
-          transform: `rotate(${angle - 180}deg)`,
-          transformOrigin: "center top",
+          transform: `translate(-50%, 0) rotate(${angle - 90}deg)`,
+          transformOrigin: "center 0%",
         }}
       />
 
-      {/* <div className="w-2.5 h-2.5 rounded-full absolute left-[44%] top-1 bg-[#302c2c]"></div>
-       */}
-
       {/* Center pivot */}
       <div className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-500" />
-
-      {/* <span className="text-lg font-semibold">
-        {Math.round(value)}
-      </span> */}
     </div>
   );
 };
+
 export default Wheeler;

@@ -14,7 +14,7 @@ const NumberField = ({
   tooltipContent = "MinWidth Value",
   config = {
     min: 0,
-    max: 0,
+    max: 100,
   },
   onDelete,
   isRequired = false,
@@ -39,10 +39,10 @@ const NumberField = ({
 
   return (
     <div className="p-2">
-      <div className="flex flex-col justify-between gap-3 rounded-lg sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-3 w-97.5 h-8.5 mx-auto rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white text-sm">{label}</h2>
+          <h2 className="text-white text-sm w-16.5 h-4.5">{label}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>
@@ -59,10 +59,10 @@ const NumberField = ({
         </div>
 
         {/* right add + delete button */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-34.5 h-8.5">
           <Input
             placeholder="Add Value"
-            className="flex items-center justify-center w-28"
+            className="flex items-center justify-center w-28.5"
             value={inputValue}
             min={config.min}
             max={config.max}

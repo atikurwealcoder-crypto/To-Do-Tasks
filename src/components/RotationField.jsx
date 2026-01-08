@@ -13,26 +13,41 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
 import Wheeler from "./Wheeler";
+import { debounceFn } from "../lib/utils";
 
 const RotationField = ({
   label = "Rotate",
   tooltipContent = "Adjust Rotate Value",
-  config = {
-    min: 0,
-    max: 360,
-  },
+  config = { min: 0, max: 360 },
   isRequired = false,
+  onUpdateValue = () => {},
   isValid = () => {},
   onDelete,
   isCustomAnim = true,
 }) => {
   const [value, setValue] = useState(0);
-  const [isDataValid, setIsDataValid] = useState(false);
+
+  const clamp = (num, min, max) => Math.min(max, Math.max(min, num));
+
+  const commitValue = (rawValue) => {
+    let currentValue = Number(rawValue);
+    if (Number.isNaN(currentValue)) return;
+
+    currentValue = clamp(currentValue, config.min, config.max);
+    setValue(currentValue);
+    onUpdateValue(currentValue)
+    console.log(currentValue)
+  };
+
+  // input handler
+    const handleInput = debounceFn((value) => {
+      commitValue(value);
+    }, 150);
 
   return (
     <div className="p-2">
-      <div className="flex flex-col justify-between gap-3 rounded-lg sm:flex-row sm:items-center">
-        {/* left label + tooltip */}
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        {/* label */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
           <h2 className="text-white text-sm">{label}</h2>
           <Tooltip>
@@ -44,19 +59,15 @@ const RotationField = ({
                 />
               </button>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>{tooltipContent}</p>
-            </TooltipContent>
+            <TooltipContent>{tooltipContent}</TooltipContent>
           </Tooltip>
         </div>
 
-        {/* right add + delete button */}
+        {/* controls */}
         <div className="flex items-center gap-2">
-          {/* knob wheeler icon */}
           <Popover>
             <PopoverTrigger asChild>
               <div className="relative flex items-center justify-center rounded-full bg-[#A1A1AA] shadow-sm w-5 h-5">
-                {/* Indicator line */}
                 <div className="absolute top-1 h-2 w-0.5 rounded bg-primary" />
               </div>
             </PopoverTrigger>
@@ -65,40 +76,34 @@ const RotationField = ({
                 min={config.min}
                 max={config.max}
                 value={value}
-                onChange={setValue}
+                onChange={handleInput}
               />
             </PopoverContent>
           </Popover>
 
           <Input
-            placeholder="Add Value"
-            className="flex items-center justify-center w-28"
+            type="number"
             value={value}
             min={config.min}
             max={config.max}
-            type="number"
-            onChange={(e) => {
-              const value = e.target.value;
-              setValue(+value);
-            }}
+            className="w-28"
+            onChange={(e) => handleInput(e.target.value)}
           />
+
           {isCustomAnim && (
-            <Button>
+            <Button onClick={onDelete}>
               <HugeiconsIcon
                 icon={Delete01Icon}
-                onClick={onDelete}
                 className="text-[#A1A1AA]"
               />
             </Button>
           )}
         </div>
       </div>
-      {/* required message */}
-      <div>
-        <p className="text-white text-sm">
-          {isRequired && "Field is Required"}
-        </p>
-      </div>
+
+      {isRequired && (
+        <p className="text-white text-sm">Field is Required</p>
+      )}
     </div>
   );
 };

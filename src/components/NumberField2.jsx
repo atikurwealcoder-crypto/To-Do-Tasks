@@ -15,7 +15,7 @@ const NumberField2 = ({
   tooltipContent = "Delay sets a pause before starting the animation, e.g., 2 waits 2 seconds before animating",
   config = {
     min: 0,
-    max: 2,
+    max: 0,
     step: 0.1,
   },
   isRequired = false,
@@ -23,7 +23,6 @@ const NumberField2 = ({
   isValid = () => {},
 }) => {
   const [inputValue, setInputValue] = useState(0);
-  // console.log(inputValue)
   const [isDataValid, setIsDataValid] = useState(false);
 
   const round = (value) => Math.round(value * 100) / 100;
@@ -36,7 +35,6 @@ const NumberField2 = ({
     updateValue = Math.min(config.max, Math.max(config.min, updateValue));
     updateValue = round(updateValue);
 
-    console.log(updateValue);
     setInputValue(updateValue);
     onUpdateValue(updateValue);
   };
@@ -53,10 +51,10 @@ const NumberField2 = ({
 
   return (
     <div className="p-2">
-      <div className="flex flex-col justify-between gap-3 rounded-lg sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between gap-3 w-97 h-8.5 mx-auto rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white text-sm">{label}</h2>
+          <h2 className="text-white w-9.25 text-sm">{label}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>
@@ -90,7 +88,7 @@ const NumberField2 = ({
               }}
             />
             {/* plus - minus icon */}
-            <div className="flex items-center justify-center absolute right-2 top-1.25 bg-[#52525B] h-6 rounded-sm">
+            <div className="flex items-center justify-between absolute w-12.25 right-2 top-1.25 bg-[#52525B] px-1 h-5.5 rounded-sm">
               <Button
                 size="icon"
                 onClick={() => updateValue(inputValue - config.step)}
@@ -100,7 +98,7 @@ const NumberField2 = ({
                   className="text-[#E4E4E7]"
                 />
               </Button>
-              <div className="w-px h-6 bg-[#71717A]" />
+              <div className="w-px h-5.5 bg-[#71717A]" />
 
               <Button
                 size="icon"

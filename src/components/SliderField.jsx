@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Slider } from "./ui/slider";
 import { Input } from "./ui/input";
@@ -15,29 +15,30 @@ const SliderField = ({
   tooltipContent = "Adjust scale value",
   config = {
     min: 0,
-    max: 0,
+    max: 500,
     step: 1,
   },
   isRequired = false,
-  isValid=()=>{},
+  isValid = () => {},
   onUpdateValue = () => {},
   onDelete,
   isCustomAnim = true,
 }) => {
   const [inputValue, setInputValue] = useState(0);
-  const [isDataValid, setIsDataValid]=useState(false);
+  const [isDataValid, setIsDataValid] = useState(false);
 
   // input handler
- const handleInput = debounceFn((rewValue) => {
-     if (rewValue === "" || rewValue === "-") return;
- 
-     let currentValue = Number(rewValue);
-     if (isNaN(currentValue)) return;
-     if (currentValue < config.min) currentValue = config.min;
-     if (currentValue > config.max) currentValue = config.max;
-     setInputValue(currentValue);
-     onUpdateValue(currentValue);
-   }, 150);
+  const handleInput = debounceFn((rewValue) => {
+    if (rewValue === "" || rewValue === "-") return;
+
+    let currentValue = Number(rewValue);
+    if (isNaN(currentValue)) return;
+    if (currentValue < config.min) currentValue = config.min;
+    if (currentValue > config.max) currentValue = config.max;
+    setInputValue(currentValue);
+    onUpdateValue(currentValue);
+    console.log("DEBOUNCED VALUE:", currentValue);
+  }, 150);
 
   return (
     <div className="p-2">
@@ -81,7 +82,7 @@ const SliderField = ({
             min={config.min}
             max={config.max}
             type="number"
-             onChange={(e) => {
+            onChange={(e) => {
               const value = e.target.value;
               setInputValue(value);
               handleInput(value);
@@ -100,7 +101,9 @@ const SliderField = ({
       </div>
       {/* required message */}
       <div>
-        <p className="text-white text-sm">{isRequired && "Field is Required"}</p>
+        <p className="text-white text-sm">
+          {isRequired && "Field is Required"}
+        </p>
       </div>
     </div>
   );
