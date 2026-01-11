@@ -18,31 +18,32 @@ import { debounceFn } from "../lib/utils";
 const RotationField = ({
   label = "Rotate",
   tooltipContent = "Adjust Rotate Value",
+  value = 0,
   config = { min: 0, max: 360 },
   isRequired = false,
   onUpdateValue = () => {},
   isValid = () => {},
+  onDisabledUpdate = () => {},
   onDelete,
   isCustomAnim = true,
 }) => {
-  const [value, setValue] = useState(0);
+  const [inputValue, setInputValue] = useState(value ?? 0);
 
   const clamp = (num, min, max) => Math.min(max, Math.max(min, num));
 
-  const commitValue = (rawValue) => {
+  const handleRotationValue = (rawValue) => {
     let currentValue = Number(rawValue);
     if (Number.isNaN(currentValue)) return;
 
     currentValue = clamp(currentValue, config.min, config.max);
-    setValue(currentValue);
-    onUpdateValue(currentValue)
-    console.log(currentValue)
+    setInputValue(currentValue);
+    onUpdateValue(currentValue);
   };
 
   // input handler
-    const handleInput = debounceFn((value) => {
-      commitValue(value);
-    }, 150);
+  const handleInput = debounceFn((value) => {
+    handleRotationValue(value);
+  }, 150);
 
   return (
     <div className="p-2">
@@ -73,9 +74,9 @@ const RotationField = ({
             </PopoverTrigger>
             <PopoverContent>
               <Wheeler
-                min={config.min}
-                max={config.max}
-                value={value}
+                min={config?.min}
+                max={config?.max}
+                value={inputValue}
                 onChange={handleInput}
               />
             </PopoverContent>
@@ -83,27 +84,22 @@ const RotationField = ({
 
           <Input
             type="number"
-            value={value}
-            min={config.min}
-            max={config.max}
+            value={inputValue}
+            min={config?.min}
+            max={config?.max}
             className="w-28"
             onChange={(e) => handleInput(e.target.value)}
           />
 
           {isCustomAnim && (
             <Button onClick={onDelete}>
-              <HugeiconsIcon
-                icon={Delete01Icon}
-                className="text-[#A1A1AA]"
-              />
+              <HugeiconsIcon icon={Delete01Icon} className="text-[#A1A1AA]" />
             </Button>
           )}
         </div>
       </div>
 
-      {isRequired && (
-        <p className="text-white text-sm">Field is Required</p>
-      )}
+      {isRequired && <p className="text-white text-sm">Field is Required</p>}
     </div>
   );
 };

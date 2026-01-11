@@ -11,7 +11,9 @@ import { debounceFn } from "../lib/utils";
 
 const RepeatField = ({
   label = "Repeat",
+
   tooltipContent = "Repeat Value",
+  value = 0,
   config = {
     min: 0,
     max: 0,
@@ -19,22 +21,30 @@ const RepeatField = ({
   isRequired = false,
   isValid = () => {},
   onUpdateValue = () => {},
+  onDisabledUpdate = () => {},
   onDelete,
   isCustomAnim = true,
 }) => {
-    const [inputValue, setInputValue] = useState(0);
+  const [inputValue, setInputValue] = useState(value ?? 0);
   const [isDataValid, setIsDataValid] = useState(false);
 
   const handleInput = debounceFn((rewValue) => {
-      if (rewValue === "" || rewValue === "-") return;
-  
-      let currentValue = Number(rewValue);
-      if (isNaN(currentValue)) return;
-      if (currentValue < config.min) currentValue = config.min;
-      if (currentValue > config.max) currentValue = config.max;
+    if (rewValue === "" || rewValue === "-") return;
+
+    let currentValue = Number(rewValue);
+    if (isNaN(currentValue)) return;
+
+    if (config?.min !== 0 || config?.max !== 0) {
+      if (currentValue < config?.min) currentValue = config?.min;
+      if (currentValue > config?.max) currentValue = config?.max;
       setInputValue(currentValue);
       onUpdateValue(currentValue);
-    }, 150);
+      return;
+    }
+
+    setInputValue(currentValue);
+    onUpdateValue(currentValue);
+  }, 150);
 
   return (
     <div className="p-2">
@@ -63,8 +73,8 @@ const RepeatField = ({
             placeholder="Add Value"
             className="flex items-center justify-center w-28"
             value={inputValue}
-            min={config.min}
-            max={config.max}
+            min={config?.min === 0 ? Infinity : config?.min}
+            max={config?.max === 0 ? Infinity : config?.max}
             type="number"
             onChange={(e) => {
               const value = e.target.value;
@@ -85,7 +95,9 @@ const RepeatField = ({
       </div>
       {/* required message */}
       <div>
-        <p className="text-white text-sm">{isRequired && "Field is Required"}</p>
+        <p className="text-white text-sm">
+          {isRequired && "Field is Required"}
+        </p>
       </div>
     </div>
   );

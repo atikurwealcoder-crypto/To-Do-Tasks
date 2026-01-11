@@ -13,18 +13,21 @@ import { debounceFn } from "../lib/utils";
 const SliderField = ({
   label = "Scale",
   tooltipContent = "Adjust scale value",
+  value = 0,
   config = {
     min: 0,
-    max: 500,
+    max: 0,
     step: 1,
   },
   isRequired = false,
   isValid = () => {},
   onUpdateValue = () => {},
+  onDisabledUpdate = () => {},
   onDelete,
   isCustomAnim = true,
 }) => {
-  const [inputValue, setInputValue] = useState(0);
+  const [inputValue, setInputValue] = useState(value ?? 0);
+  console.log(inputValue);
   const [isDataValid, setIsDataValid] = useState(false);
 
   // input handler
@@ -33,11 +36,16 @@ const SliderField = ({
 
     let currentValue = Number(rewValue);
     if (isNaN(currentValue)) return;
-    if (currentValue < config.min) currentValue = config.min;
-    if (currentValue > config.max) currentValue = config.max;
+
+    if (config?.min !== 0 || config?.max !== 0) {
+      if (currentValue < config?.min) currentValue = config?.min;
+      if (currentValue > config?.max) currentValue = config?.max;
+      setInputValue(currentValue);
+      onUpdateValue(currentValue);
+      return;
+    }
     setInputValue(currentValue);
     onUpdateValue(currentValue);
-    console.log("DEBOUNCED VALUE:", currentValue);
   }, 150);
 
   return (
@@ -64,10 +72,12 @@ const SliderField = ({
         {/* middle slider */}
         <div className="flex-1">
           <Slider
+          
             value={[inputValue]}
-            min={config.min}
-            max={config.max}
-            step={config.step}
+            min={config?.min === 0 ? Infinity : config?.min}
+            max={config?.max === 0 ? Infinity : config?.max}
+            type="number"
+            step={config?.step}
             onValueChange={(v) => setInputValue(v[0])}
             className="flex-1"
           />
@@ -79,8 +89,8 @@ const SliderField = ({
             placeholder="Add Value"
             className="flex items-center justify-center w-28"
             value={inputValue}
-            min={config.min}
-            max={config.max}
+            min={config?.min === 0 ? Infinity : config?.min}
+            max={config?.max === 0 ? Infinity : config?.max}
             type="number"
             onChange={(e) => {
               const value = e.target.value;

@@ -8,9 +8,9 @@ import React, {
 const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 
 const Wheeler = ({
-  min = 0,
-  max = 0,
-  value = 0,
+  min,
+  max,
+  value,
   size = 70,
   onChange = () => {},
 }) => {

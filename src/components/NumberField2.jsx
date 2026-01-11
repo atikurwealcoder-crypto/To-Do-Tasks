@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Input } from "./ui/input";
 import {
+  Delete01Icon,
   InformationCircleIcon,
   MinusSignIcon,
   PlusSignIcon,
@@ -12,7 +13,8 @@ import { debounceFn } from "../lib/utils";
 
 const NumberField2 = ({
   label = "Delay",
-  tooltipContent = "Delay sets a pause before starting the animation, e.g., 2 waits 2 seconds before animating",
+  tooltipContent = "Give a Value",
+  value = 0,
   config = {
     min: 0,
     max: 0,
@@ -21,8 +23,11 @@ const NumberField2 = ({
   isRequired = false,
   onUpdateValue = () => {},
   isValid = () => {},
+  onDisabledUpdate = () => {},
+  isCustomAnim = true,
+  onDelete,
 }) => {
-  const [inputValue, setInputValue] = useState(0);
+  const [inputValue, setInputValue] = useState(value ?? 0);
   const [isDataValid, setIsDataValid] = useState(false);
 
   const round = (value) => Math.round(value * 100) / 100;
@@ -32,14 +37,21 @@ const NumberField2 = ({
     let updateValue = Number(rawValue);
     if (Number.isNaN(updateValue)) return;
 
-    updateValue = Math.min(config.max, Math.max(config.min, updateValue));
+    if (config?.min !== 0 || config?.max !== 0) {
+      if (updateValue < config?.min) updateValue = config?.min;
+      if (updateValue > config?.max) updateValue = config?.max;
+
+      setInputValue(updateValue);
+      onUpdateValue(updateValue);
+      return;
+    }
     updateValue = round(updateValue);
 
     setInputValue(updateValue);
     onUpdateValue(updateValue);
   };
 
-// input handler
+  // input handler
   const handleInput = debounceFn((value) => {
     commitValue(value);
   }, 150);
@@ -71,14 +83,14 @@ const NumberField2 = ({
         </div>
 
         {/* right add + delete button */}
-        <div className="flex items-center gap-2 ">
+        <div className="flex items-center gap-3">
           <div className="relative">
             <Input
               placeholder="Add Value"
               className="flex items-center justify-center w-62.5"
               value={inputValue}
-              min={config.min}
-              max={config.max}
+              min={config?.min === 0 ? Infinity : config?.min}
+              max={config?.max === 0 ? Infinity : config?.max}
               step={config.step}
               type="number"
               onChange={(e) => {
@@ -108,6 +120,13 @@ const NumberField2 = ({
               </Button>
             </div>
           </div>
+
+          {/* delete icon */}
+          {isCustomAnim && (
+            <Button size="icon" onClick={onDelete}>
+              <HugeiconsIcon icon={Delete01Icon} className="text-[#A1A1AA]" />
+            </Button>
+          )}
         </div>
       </div>
 

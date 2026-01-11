@@ -2,17 +2,31 @@ import React, { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Input } from "./ui/input";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { InformationCircleFreeIcons } from "@hugeicons/core-free-icons";
+import {
+  Delete01Icon,
+  InformationCircleFreeIcons,
+} from "@hugeicons/core-free-icons";
+import { debounceFn } from "../lib/utils";
+import { Button } from "./ui/button";
 
 const TextField = ({
   label = "Trigger",
-  tooltipContent = "Start Trigger defines the element that triggers the animation, e.g., '.trigger' triggers the animation when the trigger element enters the viewport",
-  
+  tooltipContent = "Give a Value",
+  value = "",
   isRequired = false,
   isValid = () => {},
+  isCustomAnim = true,
+  onDelete = () => {},
+  onDisabledUpdate = () => {},
+  onUpdateValue = () => {},
 }) => {
-  const [value, setValue] = useState("");
+  const [inputValue, setInputValue] = useState(value ?? "");
   const [isDataValid, setIsDataValid] = useState(false);
+
+  const handleInput = debounceFn((newValue) => {
+    onUpdateValue(newValue);
+    isValid(true);
+  }, 150);
 
   return (
     <div className="p-2">
@@ -40,18 +54,26 @@ const TextField = ({
           <Input
             placeholder=".start_trigger"
             className="flex items-center justify-center w-62.75"
-            value={value}
+            value={inputValue}
             type="text"
             onChange={(e) => {
               const value = e.target.value;
-              setValue(value);
+              setInputValue(value);
+              handleInput(value);
             }}
           />
+          {isCustomAnim && (
+            <Button size="icon" onClick={onDelete}>
+              <HugeiconsIcon icon={Delete01Icon} className="text-[#A1A1AA]" />
+            </Button>
+          )}
         </div>
       </div>
       {/* required message */}
       <div>
-        <p className="text-white text-sm">{isRequired && "Field is Required"}</p>
+        <p className="text-white text-sm">
+          {isRequired && "Field is Required"}
+        </p>
       </div>
     </div>
   );

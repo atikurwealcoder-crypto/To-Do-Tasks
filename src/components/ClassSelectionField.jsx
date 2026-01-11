@@ -2,16 +2,31 @@ import React, { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Input } from "./ui/input";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { InformationCircleFreeIcons } from "@hugeicons/core-free-icons";
+import {
+  Delete01Icon,
+  InformationCircleFreeIcons,
+} from "@hugeicons/core-free-icons";
+import { Button } from "./ui/button";
+import { debounceFn } from "../lib/utils";
 
 const ClassSelectionField = ({
   label = "Applied on Class",
-  tooltipContent = "Start Trigger defines the element that triggers the animation, e.g., '.trigger' triggers the animation when the trigger element enters the viewport",
+  tooltipContent = "Insert a Class",
+  value="",
   isRequired = false,
   isValid = () => {},
+  isCustomAnim = true,
+  onDelete = () => {},
+  onDisabledUpdate = () => {},
+  onUpdateValue = () => {},
 }) => {
-  const [value, setValue] = useState("");
+  const [inputValue, setInputValue] = useState(value ?? "");
   const [isDataValid, setIsDataValid] = useState(false);
+
+  const handleInput = debounceFn((newValue) => {
+      onUpdateValue(newValue);
+      isValid(true);
+    }, 150);
 
   return (
     <div className="p-2">
@@ -35,24 +50,36 @@ const ClassSelectionField = ({
         </div>
 
         {/*input field*/}
-        <div className="relative flex items-center gap-2 mb-2">
+        <div className="relative flex items-center gap-2 mb-2 w-92 h-8.5">
           <Input
             placeholder="h1.hero_title"
             className="flex items-center justify-center w-full"
-            value={value}
+            value={inputValue}
             type="text"
             onChange={(e) => {
               const value = e.target.value;
-              setValue(value);
+              setInputValue(value);
+              handleInput(value);
             }}
           />
 
           {/* inside input field- right side circle */}
-          <div className="absolute top-1.75 right-2 w-5 h-5 rounded-full border-2 border-[#E4E4E7]"/>
-          <div className="absolute top-2.25 right-4.25 h-0.75 w-0.5 bg-[#E4E4E7]"/>
-          <div className="absolute top-4 right-2.5 h-0.5 w-0.75 bg-[#E4E4E7]"/>
-          <div className="absolute bottom-2.25 right-4.25 h-0.75 w-0.5 bg-[#E4E4E7]"/>
-          <div className="absolute top-4 right-5.75 h-0.5 w-0.75 bg-[#E4E4E7]"/>
+          <div className="absolute right-5.5 top-0">
+            <div className="absolute top-1.75 right-2 w-5 h-5 rounded-full border-2 border-[#E4E4E7]" />
+            <div className="absolute top-2.25 right-4.25 h-0.75 w-0.5 bg-[#E4E4E7]" />
+            <div className="absolute top-4 right-2.5 h-0.5 w-0.75 bg-[#E4E4E7]" />
+            <div className="absolute -bottom-6.25 right-4.25 h-0.75 w-0.5 bg-[#E4E4E7]" />
+            <div className="absolute top-4 right-5.75 h-0.5 w-0.75 bg-[#E4E4E7]" />
+          </div>
+
+          {/* delete icon */}
+          <div>
+            {isCustomAnim && (
+              <Button size="icon" onClick={onDelete}>
+                <HugeiconsIcon icon={Delete01Icon} className="text-[#A1A1AA]" />
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 

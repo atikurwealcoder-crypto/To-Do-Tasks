@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Input } from "./ui/input";
 import {
@@ -12,17 +12,19 @@ import { debounceFn } from "../lib/utils";
 const NumberField = ({
   label = "MinWidth",
   tooltipContent = "MinWidth Value",
+  value = 0,
   config = {
     min: 0,
-    max: 100,
+    max: 0,
   },
-  onDelete,
   isRequired = false,
   isValid = () => {},
   onUpdateValue = () => {},
+  onDisabledUpdate = () => {},
   isCustomAnim = true,
+  onDelete,
 }) => {
-  const [inputValue, setInputValue] = useState(0);
+  const [inputValue, setInputValue] = useState(value ?? 0);
   const [isDataValid, setIsDataValid] = useState(false);
 
   const handleInput = debounceFn((rewValue) => {
@@ -30,9 +32,14 @@ const NumberField = ({
 
     let currentValue = Number(rewValue);
     if (isNaN(currentValue)) return;
-    if (currentValue < config.min) currentValue = config.min;
-    if (currentValue > config.max) currentValue = config.max;
 
+    if (config?.min !== 0 || config?.max !== 0) {
+      if (currentValue < config?.min) currentValue = config?.min;
+      if (currentValue > config?.max) currentValue = config?.max;
+      setInputValue(currentValue);
+      onUpdateValue(currentValue);
+      return;
+    }
     setInputValue(currentValue);
     onUpdateValue(currentValue);
   }, 150);
@@ -64,8 +71,8 @@ const NumberField = ({
             placeholder="Add Value"
             className="flex items-center justify-center w-28.5"
             value={inputValue}
-            min={config.min}
-            max={config.max}
+            min={config?.min === 0 ? Infinity : config?.min}
+            max={config?.max === 0 ? Infinity : config?.max}
             type="number"
             onChange={(e) => {
               const value = e.target.value;
@@ -74,12 +81,8 @@ const NumberField = ({
             }}
           />
           {isCustomAnim && (
-            <Button size="icon">
-              <HugeiconsIcon
-                icon={Delete01Icon}
-                onClick={onDelete}
-                className="text-[#A1A1AA]"
-              />
+            <Button size="icon" onClick={onDelete}>
+              <HugeiconsIcon icon={Delete01Icon} className="text-[#A1A1AA]" />
             </Button>
           )}
         </div>
