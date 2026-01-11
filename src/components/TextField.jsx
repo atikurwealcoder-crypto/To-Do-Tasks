@@ -14,18 +14,16 @@ const TextField = ({
   tooltipContent = "Give a Value",
   value = "",
   isRequired = false,
-  isValid = () => {},
   isCustomAnim = true,
-  onDelete = () => {},
-  onDisabledUpdate = () => {},
   onUpdateValue = () => {},
+  onDisabledUpdate = () => {},
+  onDelete = () => {},
 }) => {
   const [inputValue, setInputValue] = useState(value ?? "");
   const [isDataValid, setIsDataValid] = useState(false);
 
   const handleInput = debounceFn((newValue) => {
     onUpdateValue(newValue);
-    isValid(true);
   }, 150);
 
   return (

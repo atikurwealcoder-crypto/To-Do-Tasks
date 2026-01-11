@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Slider } from "./ui/slider";
 import { Input } from "./ui/input";
@@ -16,18 +16,16 @@ const SliderField = ({
   value = 0,
   config = {
     min: 0,
-    max: 0,
+    max: 8000,
     step: 1,
   },
   isRequired = false,
-  isValid = () => {},
   onUpdateValue = () => {},
   onDisabledUpdate = () => {},
   onDelete,
   isCustomAnim = true,
 }) => {
   const [inputValue, setInputValue] = useState(value ?? 0);
-  // console.log(inputValue);
   const [isDataValid, setIsDataValid] = useState(false);
 
   // input handler
@@ -72,13 +70,11 @@ const SliderField = ({
         {/* middle slider */}
         <div className="flex-1">
           <Slider
-          
             value={[inputValue]}
-            min={config?.min === 0 ? Infinity : config?.min}
-            max={config?.max === 0 ? Infinity : config?.max}
-            type="number"
+            min={config?.min}
+            max={config?.max}
             step={config?.step}
-            onValueChange={(v) => setInputValue(v[0])}
+            onValueChange={(v) => setInputValue(v)}
             className="flex-1"
           />
         </div>

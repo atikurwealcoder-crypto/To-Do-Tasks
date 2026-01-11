@@ -22,12 +22,12 @@ const RotationField = ({
   config = { min: 0, max: 360 },
   isRequired = false,
   onUpdateValue = () => {},
-  isValid = () => {},
   onDisabledUpdate = () => {},
   onDelete,
   isCustomAnim = true,
 }) => {
   const [inputValue, setInputValue] = useState(value ?? 0);
+  const [isDataValid, setIsDataValid] = useState(false);
 
   const clamp = (num, min, max) => Math.min(max, Math.max(min, num));
 

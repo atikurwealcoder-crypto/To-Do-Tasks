@@ -18,7 +18,11 @@ const SelectField = ({
   label = "Method",
   tooltipContent = "Select Method",
   value = "",
-  fieldData=[],
+  fieldData = [
+    { title: "To", value: "to" },
+    { title: "From", value: "from" },
+    { title: "Set", value: "set" },
+  ],
   isRequired = false,
   isCustomAnim = true,
   onDelete = () => {},
@@ -60,10 +64,11 @@ const SelectField = ({
               <SelectValue placeholder="Select Method" />
             </SelectTrigger>
             <SelectContent>
-              {/* {fieldData.map(field)=> } */}
-              <SelectItem value="to">To</SelectItem>
-              <SelectItem value="from">From</SelectItem>
-              <SelectItem value="set">Set</SelectItem>
+              {fieldData.map((field, index) => (
+                <SelectItem key={index} value={field.value}>
+                  {field.title}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 

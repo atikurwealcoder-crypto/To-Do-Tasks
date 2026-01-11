@@ -16,9 +16,9 @@ const ClassSelectionField = ({
   isRequired = false,
   isValid = () => {},
   isCustomAnim = true,
-  onDelete = () => {},
-  onDisabledUpdate = () => {},
   onUpdateValue = () => {},
+  onDisabledUpdate = () => {},
+  onDelete = () => {},
 }) => {
   const [inputValue, setInputValue] = useState(value ?? "");
   const [isDataValid, setIsDataValid] = useState(false);

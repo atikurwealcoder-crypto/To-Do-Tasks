@@ -18,7 +18,6 @@ const NumberField = ({
     max: 0,
   },
   isRequired = false,
-  isValid = () => {},
   onUpdateValue = () => {},
   onDisabledUpdate = () => {},
   isCustomAnim = true,

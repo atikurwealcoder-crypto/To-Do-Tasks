@@ -19,7 +19,6 @@ const RepeatField = ({
     max: 0,
   },
   isRequired = false,
-  isValid = () => {},
   onUpdateValue = () => {},
   onDisabledUpdate = () => {},
   onDelete,

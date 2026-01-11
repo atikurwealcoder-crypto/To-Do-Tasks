@@ -22,7 +22,6 @@ const NumberField2 = ({
   },
   isRequired = false,
   onUpdateValue = () => {},
-  isValid = () => {},
   onDisabledUpdate = () => {},
   isCustomAnim = true,
   onDelete,
