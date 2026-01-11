@@ -18,21 +18,19 @@ const SelectField = ({
   label = "Method",
   tooltipContent = "Select Method",
   value = "",
+  fieldData=[],
   isRequired = false,
-  isValid = () => {},
   isCustomAnim = true,
   onDelete = () => {},
   onDisabledUpdate = () => {},
   onUpdateValue = () => {},
 }) => {
   const [selectedValue, setSelectedValue] = useState(value ?? "");
-  // console.log(selectedValue);
   const [isDataValid, setIsDataValid] = useState(false);
 
   const handleSelect = (value) => {
     setSelectedValue(value);
     onUpdateValue(value);
-    isValid(true);
   };
 
   return (
@@ -62,6 +60,7 @@ const SelectField = ({
               <SelectValue placeholder="Select Method" />
             </SelectTrigger>
             <SelectContent>
+              {/* {fieldData.map(field)=> } */}
               <SelectItem value="to">To</SelectItem>
               <SelectItem value="from">From</SelectItem>
               <SelectItem value="set">Set</SelectItem>

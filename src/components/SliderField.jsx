@@ -27,7 +27,7 @@ const SliderField = ({
   isCustomAnim = true,
 }) => {
   const [inputValue, setInputValue] = useState(value ?? 0);
-  console.log(inputValue);
+  // console.log(inputValue);
   const [isDataValid, setIsDataValid] = useState(false);
 
   // input handler
