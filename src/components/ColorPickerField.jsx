@@ -10,30 +10,51 @@ import { Button } from "./ui/button";
 
 export default function ColorPickerField({
   label = "Background",
-  tooltipContent = "Background animates background color, e.g., '#ff0000' changes background to red",
-  config = { defaultValue: "#000000" },
+  tooltipContent = "Select a color",
+  value = "#000000",
   isRequired = false,
-  isValid = () => {},
-  onDelete,
+  onUpdateValue = () => {},
+  onDisabledUpdate = () => {},
+  onDelete = () => {},
   isCustomAnim = true,
 }) {
-  const [color, setColor] = useState(config.defaultValue);
-  const [isValidColorCode, setIsValidColorCode]=useState("");
+  const [color, setColor] = useState((value || "#000000").toUpperCase());
+  const [error, setError] = useState("");
   const colorInputRef = useRef(null);
 
-
-  //   validate hex (3 or 6 chars)
+  // hex code validation
   const isValidHex = (value) =>
     /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(value);
 
-   if(!isValid){
-    return setIsValidColorCode("Hex Color Code is not valid. Give a Valid Color Code")
-   } 
+  // handle input typing
+  const handleInput = (rawColor) => {
+    const selectedColor = rawColor.toUpperCase();
+    setColor(selectedColor);
+
+    if (selectedColor === "" || isValidHex(selectedColor)) {
+      setError("");
+    } else {
+      setError("Hex color code is not valid");
+    }
+  };
+
+  // color picker handler
+  const handleColorSelection = (rawColor) => {
+    const selectedColor = rawColor.toUpperCase();
+
+    if (!isValidHex(selectedColor)) {
+      setError("Hex color code is not valid");
+      return;
+    }
+    setError("");
+    setColor(selectedColor);
+    onUpdateValue(selectedColor);
+  };
 
   return (
     <div className="p-2">
-      <div className="flex flex-col justify-between gap-3 rounded-lg sm:flex-row sm:items-center">
-        {/* left label + tooltip */}
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        {/* label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
           <h2 className="text-white text-sm">{label}</h2>
           <Tooltip>
@@ -51,60 +72,45 @@ export default function ColorPickerField({
           </Tooltip>
         </div>
 
-        {/* right input + delete button */}
+        {/* picker + input */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2">
-            {/* Hidden native color picker */}
-              <input
-                ref={colorInputRef}
-                type="color"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-                className="absolute h-0 w-0 opacity-0"
-              />
-            {/* Color swatch button */}
-            <Button
-              type="button"
-              size="icon"
-              onClick={() => colorInputRef.current?.click()}
-              className="h-6 w-6 rounded-full border-2 border-[#3F3F46]"
-              style={{ backgroundColor: color }}
-            />
+          <input
+            ref={colorInputRef}
+            type="color"
+            value={isValidHex(color) ? color : value}
+            onChange={(e) => handleColorSelection(e.target.value)}
+            className="absolute h-0 w-0 opacity-0"
+          />
 
-            {/* Hex input */}
-            <Input
-              value={color}
-              onChange={(e) => {
-                const value = e.target.value;
-                setColor(value);
-              }}
-              onBlur={() => {
-                if (!isValidHex(color)) {
-                  setColor(config.defaultValue);
-                }
-              }}
-              placeholder="Add Value"
-              className="w-28 uppercase"
-            />
-          </div>
+          {/* swatch */}
+          <Button
+            type="button"
+            size="icon"
+            onClick={() => colorInputRef.current?.click()}
+            className="h-6 w-6 rounded-full border-2 border-[#3F3F46]"
+            style={{ backgroundColor: isValidHex(color) ? color : value }}
+          />
+
+          {/* hex input */}
+          <Input
+            value={color}
+            onChange={(e) => handleInput(e.target.value)}
+            onBlur={() => handleColorSelection(color)}
+            placeholder="#000000"
+            className="w-28 uppercase"
+          />
+
           {isCustomAnim && (
-            <Button>
-              <HugeiconsIcon
-                icon={Delete01Icon}
-                onClick={onDelete}
-                className="text-[#A1A1AA]"
-              />
+            <Button size="icon" onClick={onDelete} className="text-[#A1A1AA]">
+              <HugeiconsIcon icon={Delete01Icon} />
             </Button>
           )}
         </div>
       </div>
-      {/* required message */}
-      <div>
-        <p className="text-white text-sm">
-          {isRequired && "Field is Required"}
-        </p>
-        <p>{isValidColorCode}</p>
-      </div>
+
+      {/* validation messages */}
+      {isRequired && <p className="text-white text-sm">Field is Required</p>}
+      {error && <p className="text-red-400 text-sm">{error}</p>}
     </div>
   );
 }

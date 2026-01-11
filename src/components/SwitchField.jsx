@@ -20,7 +20,6 @@ const SwitchField = ({
   onDelete = () => {},
 }) => {
   const [toggleValue, setToggleValue] = useState(Boolean(value));
-  console.log(toggleValue)
   const [isDataValid, setIsDataValid] = useState(false);
 
   const handleToggle = (checked) => {
