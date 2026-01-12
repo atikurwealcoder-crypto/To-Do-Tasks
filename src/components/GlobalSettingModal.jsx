@@ -1,25 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
+import { Tabs } from "@/components/ui/tabs";
 import GlobalSettingSidebarTabs from "./GlobalSettingSidebarTabs";
 import GlobalSettingTabContent from "./GlobalSettingTabContent";
 
 const GlobalSettingModal = () => {
-  const [activeTab, setActiveTab] = useState("scroll_smoother");
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
-      <div className="w-[900px] h-[520px] bg-[#151518] rounded-lg flex overflow-hidden">
-        
+    <div className="h-165.75 w-149 rounded-md bg-[#18181B]">
+      <Tabs
+        defaultValue="scroll_smoother"
+        className="flex h-full w-full"
+      >
         {/* Sidebar */}
-        <GlobalSettingSidebarTabs
-          activeTab={activeTab}
-          onChange={setActiveTab}
-        />
+        <aside className="h-full w-44.75 border-r border-[#3F3F46]">
+          <GlobalSettingSidebarTabs />
+        </aside>
 
         {/* Content */}
-      </div>
-        <div className="flex-1 p-6 overflow-auto text-white">
-          <GlobalSettingTabContent activeTab={activeTab} />
-        </div>
+        <main className="flex-1 h-full w-104">
+          <GlobalSettingTabContent />
+        </main>
+      </Tabs>
     </div>
   );
 };

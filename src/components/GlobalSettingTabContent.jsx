@@ -1,26 +1,32 @@
-import React from 'react'
-import GlobalValueTab from './GlobalValueTab';
-import ScrollSmotherTab from './ScrollSmotherTab';
-import ImportExportTab from './ImportExportTab';
-import PageTransitionTab from './PageTransitionTab';
+import React from "react";
+import { TabsContent } from "@/components/ui/tabs";
+import GlobalValueTab from "./GlobalValueTab";
+import ScrollSmotherTab from "./ScrollSmotherTab";
+import ImportExportTab from "./ImportExportTab";
+import PageTransitionTab from "./PageTransitionTab";
 
-const GlobalSettingTabContent = ({ activeTab }) => {
-  switch (activeTab) {
-    case "scroll_smoother":
-      return <ScrollSmotherTab/>;
+const GlobalSettingTabContent = () => {
 
-    case "global":
-      return <GlobalValueTab />;
+  
 
-    case "import_export":
-      return <ImportExportTab />;
+  return (
+    <div className="h-full p-3 text-white">
+      <TabsContent value="scroll_smoother">
+        <ScrollSmotherTab />
+      </TabsContent>
 
-    case "page_transition":
-      return <PageTransitionTab />;
+      <TabsContent value="global_value">
+        <GlobalValueTab />
+      </TabsContent>
 
-    default:
-      return null;
-  }
-}
+      <TabsContent value="import_export">
+        <ImportExportTab />
+      </TabsContent>
 
+      <TabsContent value="page_transition">
+        <PageTransitionTab />
+      </TabsContent>
+    </div>
+  );
+};
 export default GlobalSettingTabContent;

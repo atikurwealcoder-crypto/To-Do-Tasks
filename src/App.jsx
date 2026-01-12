@@ -13,7 +13,7 @@ import TextField from "./components/TextField";
 function App() {
   return (
     <div className="mt-10 max-w-110 mx-auto bg-[#27272A]">
-      <SliderField />
+      {/* <SliderField />
       <RepeatField />
       <RotationField />
       <NumberField />
@@ -22,8 +22,8 @@ function App() {
       <SwitchField />
       <ClassSelectionField />
       <NumberField2 />
-      <ColorPickerField/>
-      {/* <GlobalSettingModal/> */}
+      <ColorPickerField/> */}
+      <GlobalSettingModal/>
     </div>
   );
 }
