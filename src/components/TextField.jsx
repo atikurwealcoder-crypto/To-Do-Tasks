@@ -68,11 +68,7 @@ const TextField = ({
         </div>
       </div>
       {/* required message */}
-      <div>
-        <p className="text-white text-sm">
-          {isRequired && "Field is Required"}
-        </p>
-      </div>
+      {isRequired && <p className="text-red-500">"Field is Required"</p>}
     </div>
   );
 };

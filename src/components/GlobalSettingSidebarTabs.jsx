@@ -16,7 +16,6 @@ const GlobalSettingSidebarTabs = () => {
           <TabsTrigger
             key={tab.id}
             value={tab.id}
-            // onClick={()=>console.log(`${tab.label} clicked`)}
             className="w-37.25 h-9 rounded-md text-sm text-[#A1A1AA] transition hover:bg-[#27272A]"
           >
             {tab.label}

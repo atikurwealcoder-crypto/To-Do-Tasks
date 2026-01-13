@@ -11,7 +11,6 @@ import {
   SmartPhone01Icon,
   Tablet02Icon,
 } from "@hugeicons/core-free-icons";
-import { debounceFn } from "../lib/utils";
 
 // Devices data
 const DEVICES = [
@@ -37,6 +36,11 @@ const DEVICES = [
   },
 ];
 
+// slider min and max value range
+const MIN_VALUE = 0.5;
+const MAX_VALUE = 3;
+const STEP = 0.05;
+
 const ScrollSmootherSettings = () => {
   const [config, setConfig] = useState({
     enableScrollSmother: true,
@@ -51,16 +55,13 @@ const ScrollSmootherSettings = () => {
   const [tempValue, setTempValue] = useState(
     config.configuration[selectedDevice].value
   );
-  
-  // slider min and max value range
-  const MIN_VALUE = 0.5;
-  const MAX_VALUE = 3;
-  
+
   // derived state
   const isGlobalEnabled = config.enableScrollSmother;
   const deviceConfig = config.configuration[selectedDevice];
-  
-  console.log(selectedDevice, deviceConfig.value);
+
+  // console.log(selectedDevice, deviceConfig.value);
+
   // Smooth Scroll toggle switch handler
   const toggleGlobalSwitch = (value) => {
     setConfig((prev) => ({
@@ -83,20 +84,25 @@ const ScrollSmootherSettings = () => {
     }));
   };
 
-  // sync temp value when device changes
+  // slider and input field handler
   useEffect(() => {
     setTempValue(deviceConfig.value);
   }, [selectedDevice, deviceConfig.value]);
 
-  const clampValue = (value) => {
-    if (Number.isNaN(value)) return;
-    if (value < MIN_VALUE) value = MIN_VALUE;
-    if (value > MAX_VALUE) value = MAX_VALUE;
-    return value;
+  const roundToStep = (value, step = STEP) => {
+    return Math.round(value / step) * step;
+  };
+
+  const clampRoundValue = (value) => {
+    if (Number.isNaN(value)) return MIN_VALUE;
+
+    const clampedValue = Math.min(MAX_VALUE, Math.max(MIN_VALUE, value));
+
+    return Number(roundToStep(clampedValue).toFixed(2));
   };
 
   const updateValue = (value) => {
-    const updatedValue = clampValue(value);
+    const updatedValue = clampRoundValue(value);
 
     setConfig((prev) => ({
       ...prev,
@@ -110,10 +116,15 @@ const ScrollSmootherSettings = () => {
     }));
   };
 
+  // close button click handler
+  const handleCloseClick = () => {
+    console.log("close button clicked");
+  };
+
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="w-96.5 h-62.75 rounded-xl bg-[#27272A] p-5 shadow-lg]">
+      <div className="w-96.5 h-62.75 rounded-xl bg-[#27272A] p-3.75 shadow-lg">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-medium">Scroll Smoother</h2>
           <Switch
@@ -159,12 +170,12 @@ const ScrollSmootherSettings = () => {
                   Set the scroll smoother level
                 </p>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 w-62.5">
                   <Slider
                     value={[tempValue]}
                     min={MIN_VALUE}
                     max={MAX_VALUE}
-                    step={0.05}
+                    step={STEP}
                     onValueChange={(v) => {
                       updateValue(v[0]);
                       setTempValue(v[0]);
@@ -174,8 +185,8 @@ const ScrollSmootherSettings = () => {
 
                   <Input
                     type="number"
-                    placeholder={"Add Value"}
-                    step={0.05}
+                    placeholder="Add Value"
+                    step={STEP}
                     min={MIN_VALUE}
                     max={MAX_VALUE}
                     value={tempValue}
@@ -184,11 +195,11 @@ const ScrollSmootherSettings = () => {
                     }}
                     onBlur={() => {
                       const num = Number(tempValue);
-                      const value = clampValue(num);
+                      const value = clampRoundValue(num);
                       updateValue(value);
                       setTempValue(value);
                     }}
-                    className="w-20 bg-[#3F3F46] text-center"
+                    className="w-15.5 h-8.5 bg-[#3F3F46] text-center"
                   />
                 </div>
               </div>
@@ -196,9 +207,10 @@ const ScrollSmootherSettings = () => {
           </>
         )}
       </div>
-      {/* Footer */}
-      <div className="mt-5 flex justify-end">
+      {/* close button */}
+      <div className="flex justify-end">
         <Button
+          onClick={handleCloseClick}
           size="sm"
           className="bg-[#B34A33] w-18.5 h-7.5 flex items-center gap-1 px-3 py-1.5"
         >

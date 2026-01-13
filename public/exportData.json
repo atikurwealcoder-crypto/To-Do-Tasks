@@ -1,0 +1,62 @@
+ [
+  {
+    "id": "1",
+    "label": "Animation 1",
+    "type": "single"
+  },
+  {
+    "id": "2",
+    "label": "Animation 2",
+    "type": "single"
+  },
+  {
+    "id": "3",
+    "label": "Animation 3",
+    "type": "single"
+  },
+  {
+    "id": "4",
+    "label": "Animation 4",
+    "type": "single"
+  },
+  {
+    "id": "5",
+    "label": "Animation 5",
+    "type": "single"
+  },
+  {
+    "id": "6",
+    "label": "Animation 6",
+    "type": "single"
+  },
+  {
+    "id": "7",
+    "label": "Animation 7",
+    "type": "single"
+  },
+  {
+    "id": "8",
+    "label": "Animation 8",
+    "type": "single"
+  },
+  {
+    "id": "9",
+    "label": "Animation 9",
+    "type": "single"
+  },
+  {
+    "id": "10",
+    "label": "Animation 10",
+    "type": "single"
+  },
+  {
+    "id": "11",
+    "label": "Animation 11",
+    "type": "single"
+  },
+  {
+    "id": "12",
+    "label": "Animation 12",
+    "type": "single"
+  }
+]

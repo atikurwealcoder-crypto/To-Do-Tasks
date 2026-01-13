@@ -1,3 +1,4 @@
+import { Toaster } from "sonner";
 import ClassSelectionField from "./components/ClassSelectionField";
 import ColorPickerField from "./components/ColorPickerField";
 import GlobalSettingModal from "./components/GlobalSettingModal";
@@ -13,6 +14,7 @@ import TextField from "./components/TextField";
 function App() {
   return (
     <div className="mt-10 max-w-110 mx-auto bg-[#27272A]">
+      <Toaster richColors position="top-right" />
       {/* <SliderField />
       <RepeatField />
       <RotationField />
