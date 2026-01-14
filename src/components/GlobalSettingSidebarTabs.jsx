@@ -11,12 +11,12 @@ const GlobalSettingSidebarTabs = () => {
 
   return (
     <div>
-      <TabsList className="w-37.258 h-full flex flex-col rounded-md gap-1 bg-transparent px-2 py-3 overflow-y-auto">
+      <TabsList className=" h-full flex flex-col rounded-md gap-1 bg-transparent p-3.75 overflow-y-auto">
         {tabs.map((tab) => (
           <TabsTrigger
             key={tab.id}
             value={tab.id}
-            className="w-37.25 h-9 rounded-md text-sm text-[#A1A1AA] transition hover:bg-[#27272A]"
+            className="w-37.25 h-9 rounded-md text-[15px] font-normal leading-5 text-[#A1A1AA] data-[state=active]:bg-[#27272A] data-[state=active]:text-[#FAFAFA] hover:bg-[#27272A]"
           >
             {tab.label}
           </TabsTrigger>

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { CancelCircleIcon } from "@hugeicons/core-free-icons";
 
 const ImportExportTab = () => {
-
   // close button handler
   const handleCloseClick = () => {
     console.log("close button clicked");
@@ -15,7 +14,7 @@ const ImportExportTab = () => {
     <div>
       <div className="space-y-5 mb-5">
         <ExportSection />
-      <ImportSection/>
+        <ImportSection />
       </div>
 
       {/* close button */}

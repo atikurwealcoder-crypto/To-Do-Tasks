@@ -123,13 +123,16 @@ const ScrollSmootherSettings = () => {
 
   return (
     <div className="space-y-5">
-      {/* Header */}
+
       <div className="w-96.5 h-62.75 rounded-xl bg-[#27272A] p-3.75 shadow-lg">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium">Scroll Smoother</h2>
+          <h2 className="h-5 text-[15px] font-normal leading-5">
+            Scroll Smoother
+          </h2>
           <Switch
             checked={isGlobalEnabled}
             onCheckedChange={toggleGlobalSwitch}
+            className="data-[state=checked]:bg-[#3D7C1F] data-[state=unchecked]:bg-[#52525B]"
           />
         </div>
 
@@ -154,13 +157,14 @@ const ScrollSmootherSettings = () => {
             </div>
 
             {/* Enable Per Device */}
-            <div className="mt-4 flex items-center gap-5 text-sm">
-              <p>
+            <div className="w-[163px] h-[30px] mt-4 flex items-center gap-3.5 text-sm">
+              <p className="w-[118px]">
                 Enable on <span className="capitalize">{selectedDevice}</span>
               </p>
               <Switch
                 checked={deviceConfig?.enable}
                 onCheckedChange={toggleDevice}
+                className="data-[state=checked]:bg-[#3D7C1F] data-[state=unchecked]:bg-[#52525B]"
               />
             </div>
 
@@ -180,7 +184,7 @@ const ScrollSmootherSettings = () => {
                       updateValue(v[0]);
                       setTempValue(v[0]);
                     }}
-                    className="flex-1 cursor-pointer"
+                    className="flex-1 cursor-pointer bg-[#3F3F46] data-[orientation=horizontal]:h-0.5"
                   />
 
                   <Input
