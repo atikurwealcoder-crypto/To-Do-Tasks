@@ -86,7 +86,7 @@ const ExportSection = () => {
   };
 
   return (
-    <div className="w-full max-w-md rounded-xl h-[261px] bg-[#27272A] p-4 space-y-4">
+    <div className="w-full max-w-md rounded-xl h-65.25 bg-[#27272A] p-4 space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-medium">Export</h2>

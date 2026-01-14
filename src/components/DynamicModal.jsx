@@ -9,9 +9,9 @@ import {
 } from "@hugeicons/core-free-icons";
 
 const DynamicModal = ({
-  title = "Draft Animation",
-  subtitle = "Your draft animation list",
-  config = {
+  property = {
+    title: "Draft Animation",
+    subtitle: "Your draft animation list",
     count: 12,
     headingIcon: <HugeiconsIcon icon={NoteEditIcon} className="w-6 h-6" />,
     deleteBtn: {
@@ -26,7 +26,7 @@ const DynamicModal = ({
   children,
   onClose = () => {},
   onDelete = () => {},
-  onInsert = () => {},
+  onAccept = () => {},
 }) => {
   return (
     <div className="w-99.5 max-h-97.5 rounded-md bg-[#27272A] p-3.75 flex flex-col gap-7.5">
@@ -34,26 +34,26 @@ const DynamicModal = ({
       <div className="flex items-start justify-between">
         <div className="w-50.5 h-10.5 flex items-center gap-3">
           <div className="w-10 h-10 p-2 rounded-full bg-[#64964C] flex items-center justify-center text-[#FAFAFA]">
-            {config.headingIcon}
+            {property?.headingIcon}
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center gap-1.5">
               <h2 className="text-[15px] font-medium text-[#FAFAFA] leading-5">
-                {title}
+                {property?.title ?? ""}
               </h2>
               <span className="bg-[#64964C] w-6 h-4.5 rounded-2xl p-1.25 text-white font-[12px] flex items-center justify-center">
-                {config.count}
+                {property?.count ?? 0}
               </span>
             </div>
 
             <p className="text-sm font-normal text-[#E4E4E7] leading-4.5">
-              {subtitle}
+              {property?.subtitle ?? ""}
             </p>
           </div>
         </div>
 
-        <button onClick={onClose} className="">
+        <button onClick={onClose}>
           <HugeiconsIcon
             icon={CancelCircleIcon}
             className="text-[#E55F42] w-4 h-4"
@@ -70,15 +70,15 @@ const DynamicModal = ({
           onClick={onDelete}
           className="bg-[#3F3F46] w-43.5 h-9 rounded-md text-[15px] font-medium text-[#FAFAFA] leading-5"
         >
-          {config.deleteBtn.icon}
-          {config.deleteBtn.label}
+          {property?.deleteBtn?.icon}
+          {property?.deleteBtn?.label}
         </Button>
         <Button
-          onClick={onInsert}
+          onClick={onAccept}
           className="bg-[#3F3F46] w-43.5 h-9 rounded-md text-[15px] font-medium text-[#FAFAFA] leading-5"
         >
-          {config.publishBtn.icon}
-          {config.publishBtn.label}
+          {property?.publishBtn?.icon}
+          {property?.publishBtn?.label}
         </Button>
       </div>
     </div>
