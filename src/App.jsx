@@ -16,7 +16,7 @@ import ModalInfoTextAreaField from "./components/ModalInfoTextAreaField";
 
 function App() {
   return (
-    <div className="mt-10 max-w-130 mx-auto bg-[#27272A] p-5 space-y-10">
+    <div className="mt-10 max-w-130 mx-auto  p-5 space-y-10">
       <Toaster richColors position="top-right" />
       {/* <SliderField />
       <RepeatField />
@@ -28,10 +28,10 @@ function App() {
       <ClassSelectionField />
       <NumberField2 />
       <ColorPickerField/> */}
-      {/* <GlobalSettingModal/> */}
+      <GlobalSettingModal/>
       {/* <DynamicModal /> */}
-      <ModalInfoInputField />
-      <ModalInfoTextAreaField />
+      {/* <ModalInfoInputField />
+      <ModalInfoTextAreaField /> */}
     </div>
   );
 }

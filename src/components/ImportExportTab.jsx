@@ -12,7 +12,7 @@ const ImportExportTab = () => {
   };
   return (
     <div>
-      <div className="space-y-5 mb-5">
+      <div className="space-y-3.75 mb-5">
         <ExportSection />
         <ImportSection />
       </div>
@@ -22,7 +22,7 @@ const ImportExportTab = () => {
         <Button
           onClick={handleCloseClick}
           size="sm"
-          className="bg-[#B34A33] w-18.5 h-7.5 flex items-center gap-1 px-3 py-1.5"
+          className="bg-[#B34A33] w-18.5 h-7.5 gap-1 px-3 py-1.5"
         >
           <HugeiconsIcon icon={CancelCircleIcon} />
           Close

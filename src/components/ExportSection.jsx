@@ -1,19 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Download01Icon } from "@hugeicons/core-free-icons";
-import exportAnimations from "../../public/exportData.json";
 import { toast } from "sonner";
 
 const ExportSection = () => {
-   const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [animationData, setAnimationData] = useState([]);
 
-  const allSelected = selectedIds.length === exportAnimations.length;
+  useEffect(() => {
+    fetch("/exportData.json")
+      .then((res) => res.json())
+      .then((json) => setAnimationData(json))
+      .catch(console.error);
+  }, []);
+
+  const allSelected = selectedIds.length === animationData.length;
 
   // Toggle select all
   const toggleSelectAll = (checked) => {
-    setSelectedIds(checked ? exportAnimations.map((item) => item.id) : []);
+    setSelectedIds(checked ? animationData.map((item) => item.id) : []);
   };
 
   // Toggle single checkbox
@@ -74,9 +81,9 @@ const ExportSection = () => {
     if (selectedIds.length === 0) return;
 
     const dataToExport =
-      selectedIds.length === exportAnimations.length
-        ? exportAnimations
-        : exportAnimations.filter((item) => selectedIds.includes(item.id));
+      selectedIds.length === animationData.length
+        ? animationData
+        : animationData.filter((item) => selectedIds.includes(item.id));
 
     saveJsonFile(dataToExport, "animations-export.json");
   };
@@ -86,58 +93,65 @@ const ExportSection = () => {
   };
 
   return (
-    <div className="w-full max-w-md rounded-xl h-65.25 bg-[#27272A] p-4 space-y-4">
+    <div className="w-96.5 rounded-md h-65.25 bg-[#27272A] p-3.75 space-y-3.75">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-sm font-medium">Export</h2>
+      <div className="w-89 h-7.5 flex items-center justify-between">
+        <h2 className="text-[15px] font-normal leading-5 text-white">Export</h2>
 
         <Button
           size="icon"
           onClick={handleExportSelected}
-          className="gap-1"
+          className="flex items-center gap-1 text-[13px] font-normal leading-4.5 w-19.75 px-3 py-1.5 rounded-md h-full bg-[#3F3F46] text-[#FAFAFA]"
         >
-          <HugeiconsIcon icon={Download01Icon} size={16} />
+          <HugeiconsIcon icon={Download01Icon} className="h-3 w-3" />
           Export
         </Button>
       </div>
 
       {/* Select All */}
-      <div className="flex items-center gap-2 px-1">
-        <Checkbox checked={allSelected} onCheckedChange={toggleSelectAll} />
-        <span className="text-sm">
+      <div className="flex items-center gap-1.5 w-27.5 h-4.5">
+        <Checkbox
+          checked={allSelected}
+          onCheckedChange={toggleSelectAll}
+          className="text-[#A1A1AA] w-3.25 h-3.25"
+        />
+        <p className="text-sm font-normal leading-4.5 w-14.5 h-full">
           Select All
-          <span className="ml-1 text-xs text-[#A1A1AA]">
-            ({exportAnimations.length})
-          </span>
+        </p>
+        <span className="text-xs font-normal leading-4.5 text-white bg-[#166272] w-6 h-full rounded-xl px-1.25">
+          {animationData.length}
         </span>
       </div>
 
       {/* List */}
-      <div className="space-y-1">
-        {exportAnimations.slice(0, 5).map((item) => (
-          <div
-            key={item.id}
-            className="flex items-center justify-between gap-2 rounded-md px-1 py-1.5 hover:bg-[#3F3F46]"
-          >
+      <div className="flex flex-col gap-3">
+        {animationData.slice(0, 5).map((item) => (
+          <div key={item.id} className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Checkbox
                 checked={selectedIds.includes(item.id)}
                 onCheckedChange={() => toggleItem(item.id)}
+                className="text-[#A1A1AA] w-3.25 h-3.25"
               />
-              <span className="text-sm">{item.label}</span>
+              <span className="text-sm font-normal leading-4.5">
+                {item.label}
+              </span>
             </div>
 
-            <Button
+            <button
               onClick={() => handleExportSingle(item)}
-              className="bg-[#3F3F46] w-5 h-5 rounded-full p-1.5"
+              className="bg-[#3F3F46] w-5 h-5 rounded-full p-1 flex items-center justify-center cursor-pointer"
             >
-              <HugeiconsIcon icon={Download01Icon} size={16} />
-            </Button>
+              <HugeiconsIcon
+                icon={Download01Icon}
+                className="w-2.5 h-2.5 text-[#E4E4E7]"
+              />
+            </button>
           </div>
         ))}
       </div>
     </div>
   );
-}
+};
 
-export default ExportSection
+export default ExportSection;

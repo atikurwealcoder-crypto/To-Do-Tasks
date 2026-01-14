@@ -60,7 +60,6 @@ const ScrollSmootherSettings = () => {
   const isGlobalEnabled = config.enableScrollSmother;
   const deviceConfig = config.configuration[selectedDevice];
 
-  // console.log(selectedDevice, deviceConfig.value);
 
   // Smooth Scroll toggle switch handler
   const toggleGlobalSwitch = (value) => {
@@ -126,25 +125,25 @@ const ScrollSmootherSettings = () => {
 
       <div className="w-96.5 h-62.75 rounded-xl bg-[#27272A] p-3.75 shadow-lg">
         <div className="flex items-center justify-between">
-          <h2 className="h-5 text-[15px] font-normal leading-5">
+          <h2 className="text-[15px] font-normal leading-5">
             Scroll Smoother
           </h2>
           <Switch
             checked={isGlobalEnabled}
             onCheckedChange={toggleGlobalSwitch}
-            className="data-[state=checked]:bg-[#3D7C1F] data-[state=unchecked]:bg-[#52525B]"
+            className="data-[state=checked]:bg-[#3D7C1F] data-[state=unchecked]:bg-[#52525B] cursor-pointer"
           />
         </div>
 
         {isGlobalEnabled && (
           <>
             {/* Device Tabs */}
-            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 bg-[#18181B] p-1 rounded-md">
+            <div className="w-89 h-10.5 mt-4 grid grid-cols-2 gap-1.5 sm:grid-cols-4 bg-[#18181B] p-1 rounded-md ">
               {DEVICES.map((d) => (
                 <button
                   key={d.key}
                   onClick={() => setSelectedDevice(d.key)}
-                  className={`rounded-md flex items-center gap-1 p-1.5 text-sm transition ${
+                  className={`rounded-md flex items-center gap-1 p-1.5 text-sm font-normal leading-4.5 transition ${
                     selectedDevice === d.key
                       ? "bg-[#3F3F46] text-[#FAFAFA]"
                       : "text-[#A1A1AA] hover:bg-[#3F3F46]"
@@ -157,24 +156,24 @@ const ScrollSmootherSettings = () => {
             </div>
 
             {/* Enable Per Device */}
-            <div className="w-[163px] h-[30px] mt-4 flex items-center gap-3.5 text-sm">
-              <p className="w-[118px]">
+            <div className="w-40.75 h-7.5 mt-4 flex items-center gap-3.5 text-sm">
+              <p className="w-29.5">
                 Enable on <span className="capitalize">{selectedDevice}</span>
               </p>
               <Switch
                 checked={deviceConfig?.enable}
                 onCheckedChange={toggleDevice}
-                className="data-[state=checked]:bg-[#3D7C1F] data-[state=unchecked]:bg-[#52525B]"
+                className="data-[state=checked]:bg-[#3D7C1F] data-[state=unchecked]:bg-[#52525B] cursor-pointer"
               />
             </div>
 
             {deviceConfig?.enable && (
               <div className="mt-6 space-y-2">
-                <p className="text-sm text-[#FAFAFA]">
-                  Set the scroll smoother level
+                <p className="text-sm font-normal leading-4.5 text-[#FAFAFA]">
+                  Set the scroll smother level
                 </p>
 
-                <div className="flex items-center gap-3 w-62.5">
+                <div className="flex items-center gap-5 w-62.5">
                   <Slider
                     value={[tempValue]}
                     min={MIN_VALUE}
@@ -203,7 +202,7 @@ const ScrollSmootherSettings = () => {
                       updateValue(value);
                       setTempValue(value);
                     }}
-                    className="w-15.5 h-8.5 bg-[#3F3F46] text-center"
+                    className="w-15.5 h-8.5 bg-[#3F3F46] text-[#FAFAFA] mr-1 text-sm font-normal leading-4.5 px-2.5 py-2 placeholder:text-[#A1A1AA] border-none focus-visible:ring-0"
                   />
                 </div>
               </div>
@@ -216,7 +215,7 @@ const ScrollSmootherSettings = () => {
         <Button
           onClick={handleCloseClick}
           size="sm"
-          className="bg-[#B34A33] w-18.5 h-7.5 flex items-center gap-1 px-3 py-1.5"
+          className="bg-[#B34A33] w-18.5 h-7.5 gap-1 px-3 py-1.5"
         >
           <HugeiconsIcon icon={CancelCircleIcon} />
           Close

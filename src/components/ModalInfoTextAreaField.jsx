@@ -19,7 +19,6 @@ const ModalInfoTextAreaField = ({
 
     try {
       await navigator.clipboard.writeText(inputText);
-      console.log(value)
       toast.success("Copy successful", {
         description: "Text copied to clipboard",
       });

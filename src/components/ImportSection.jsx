@@ -52,14 +52,14 @@ const ImportSection = () => {
       <div
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
-        className="border border-dashed border-[#71717A] bg-[#18181B] rounded-lg p-3.75 text-center space-y-3"
+        className="border border-dashed border-[#71717A] bg-[#18181B] rounded-lg p-3.75 text-center space-y-3 w-89 h-39.5"
       >
         <div className="flex flex-col items-center">
-          <img src="/file-icon.png" alt="" />
+          <img src="/file-icon.png" alt="" className="w-12 h-14" />
           {file && <p className="text-xs text-green-400">{file.name}</p>}
 
-          <p className="text-sm text-[#A1A1AA]">
-            Drag and drop or upload .json file
+          <p className="text-[13px] font-normal leading-4.5 text-[#A1A1AA]">
+            Drag and drop or upload.json file
           </p>
         </div>
 
@@ -71,10 +71,9 @@ const ImportSection = () => {
           onChange={(e) => handleFile(e.target.files[0])}
         />
 
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => inputRef.current.click()}
+        <Button 
+        onClick={() => inputRef.current.click()}
+        className="bg-[#3F3F46] w-22 h-7.5 px-3 py-1.5 rounded-md text-[#FAFAFA] text-[13px] font-normal leading-4.5"
         >
           Browse file
         </Button>
@@ -82,14 +81,18 @@ const ImportSection = () => {
         {error && <p className="text-xs text-red-400">{error}</p>}
       </div>
 
-      <div>
-        <p className="text-xs text-[#A1A1AA]">
+      <div className="space-y-2">
+        <p className="text-[13px] font-normal leading-4.5 text-[#E4E4E7]">
           Streamlined data import solutions for enhanced accessibility and
           control
         </p>
 
-        <Button onClick={handleImport} disabled={!file} className="gap-1">
-          <HugeiconsIcon icon={Upload01Icon} size={16} />
+        <Button
+          onClick={handleImport}
+          // disabled={!file}
+          className="gap-1 bg-[#3F3F46] w-20 h-7.5 rounded-md px-3 py-1.5"
+        >
+          <HugeiconsIcon icon={Upload01Icon} />
           Import
         </Button>
       </div>

@@ -45,7 +45,7 @@ const PageTransitionExitSection = () => {
   return (
     <div className="w-96 bg-[#27272A] rounded-md p-4 space-y-4">
       {/* Header */}
-      <h1 className="text-white text-[15px] font-normal">Exit</h1>
+      <h1 className="text-white text-[15px] font-normal leading-5">Exit</h1>
 
       {/* Render selected properties */}
       {Object.entries(pageTransitionConfig).map(([key, value]) => (
@@ -65,7 +65,7 @@ const PageTransitionExitSection = () => {
       {/* Add Properties */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-white">Add Properties</span>
+          <span className="text-[15px] font-normal leading-5 text-[#FAFAFA]">Add Properties</span>
           <HugeiconsIcon
             icon={AddCircleIcon}
             className="text-[#D4D4D8] w-4 h-4"
