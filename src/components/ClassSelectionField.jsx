@@ -64,7 +64,7 @@ const ClassSelectionField = ({
           />
 
           {/* inside input field- right side circle */}
-          <div className="absolute right-5.5 top-0">
+          <div className="absolute right-7 top-0">
             <div className="absolute top-1.75 right-2 w-5 h-5 rounded-full border-2 border-[#E4E4E7]" />
             <div className="absolute top-2.25 right-4.25 h-0.75 w-0.5 bg-[#E4E4E7]" />
             <div className="absolute top-4 right-2.5 h-0.5 w-0.75 bg-[#E4E4E7]" />

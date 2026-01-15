@@ -24,6 +24,7 @@ const SearchField = () => {
       .catch(console.error);
   }, []);
 
+  // search field handler
   const handleSearch = (value) => {
     const query = value.trim().toLowerCase();
 
@@ -44,6 +45,7 @@ const SearchField = () => {
     setResults(filtered);
   };
 
+  // recent search section handler
   const addToRecent = (item) => {
     setRecentSearches((prev) => {
       const exists = prev.find((x) => x.id === item.id);
@@ -56,10 +58,12 @@ const SearchField = () => {
     setResults([]);
   };
 
+  // single search item remover
   const removeRecent = (id) => {
     setRecentSearches((prev) => prev.filter((item) => item.id !== id));
   };
 
+  // all search item remover
   const clearAll = () => setRecentSearches([]);
 
   return (
@@ -119,11 +123,11 @@ const SearchField = () => {
       {/* Recent Searches */}
       <div className="space-y-2 w-82">
         <div className="flex justify-between items-center">
-          <p className="text-sm text-white">Recent Searches</p>
+          <p className="text-sm font-normal leading-4.5 text-[#FAFAFA]">Recent Searches</p>
           {recentSearches.length > 0 && (
             <button
               onClick={clearAll}
-              className="text-xs text-[#A1A1AA] hover:text-white"
+              className="text-sm font-normal leading-4.5 text-[#FAFAFA]"
             >
               Clear All
             </button>
@@ -133,15 +137,18 @@ const SearchField = () => {
         {recentSearches.map((item) => (
           <div
             key={item.id}
-            className="flex items-center justify-between text-sm text-[#E4E4E7]"
+            className="flex items-center justify-between text-sm text-[#A1A1AA] space-y-3"
           >
             <span>{item.label}</span>
-            <button onClick={() => removeRecent(item.id)}>
+            <Button
+             onClick={() => removeRecent(item.id)}
+             className="bg-[#3F3F46] w-5 h-5 rounded-full"
+             >
               <HugeiconsIcon
                 icon={Delete01Icon}
                 className="w-4 h-4 text-[#A1A1AA]"
               />
-            </button>
+            </Button>
           </div>
         ))}
       </div>

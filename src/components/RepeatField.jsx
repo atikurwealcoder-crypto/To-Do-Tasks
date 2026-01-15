@@ -6,33 +6,38 @@ import {
   Delete01Icon,
   InfinityIcon,
   InformationCircleIcon,
-  ShuffleIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
 import { debounceFn } from "../lib/utils";
 
 const RepeatField = ({
-  label = "Repeat",
-  tooltipContent = "Repeat Value",
-  value = 0,
-  config = {
-    min: 0,
-    max: 0,
-  },
-  isRequired = false,
+  property = {},
+  value = { repeat: 0, yoyo: false },
   onUpdateValue = () => {},
   onDisabledUpdate = () => {},
-  onUpdateYoyo = () => {},
-  onDelete,
-  isCustomAnim = true,
+  onDelete = () => {},
 }) => {
-  const [inputValue, setInputValue] = useState(value ?? 0);
+  // default value
+  const {
+    title = "title",
+    tooltipContent = "Enter the value.",
+    isRequired = false,
+    isCustomAnim = true,
+    min = 0,
+    max = 0,
+    path = "",
+    ...rest
+  } = property || {};
+
+  const [inputValue, setInputValue] = useState(value.repeat ?? 0);
   const [isDataValid, setIsDataValid] = useState(false);
 
-  const updateRepeat = (val) => {
-    setInputValue(val);
-    onUpdateValue(val);
+  const updateValue = (newValues) => {
+    onUpdateValue({
+      ...value,
+      ...newValues,
+    });
   };
 
   const handleInput = debounceFn((rewValue) => {
@@ -41,26 +46,40 @@ const RepeatField = ({
     let currentValue = Number(rewValue);
     if (isNaN(currentValue)) return;
 
-    if (config?.min !== 0 || config?.max !== 0) {
-      if (currentValue < config?.min) currentValue = config?.min;
-      if (currentValue > config?.max) currentValue = config?.max;
+    if (min !== 0 || max !== 0) {
+      if (currentValue < min) currentValue = min;
+      if (currentValue > max) currentValue = max;
 
-      updateRepeat(currentValue);
-      onUpdateYoyo(false);
+      setInputValue(currentValue);
+      updateValue({
+        repeat: currentValue,
+        yoyo: false,
+      });
       return;
     }
 
-    updateRepeat(currentValue);
+    setInputValue(currentValue);
+    updateValue({
+      repeat: currentValue,
+      yoyo: false,
+    });
   }, 150);
 
   const setInfinity = () => {
-    updateRepeat(-1);
-    onUpdateYoyo(false);
+    setInputValue(-1);
+    updateValue({
+      repeat: -1,
+      yoyo: false,
+    });
   };
 
   const setShuffle = () => {
-    updateRepeat(1);
-    onUpdateYoyo(true);
+    const shuffleValue = Math.max(value.repeat ?? 0, 1);
+    setInputValue(shuffleValue);
+    updateValue({
+      repeat: shuffleValue,
+      yoyo: true,
+    });
   };
 
   return (
@@ -68,7 +87,7 @@ const RepeatField = ({
       <div className="flex flex-col justify-between gap-3 rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white text-sm">{label}</h2>
+          <h2 className="text-white text-sm">{title}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>
@@ -90,8 +109,8 @@ const RepeatField = ({
             placeholder="Add Value"
             className="flex items-center justify-center w-28"
             value={inputValue}
-            min={config?.min === 0 ? Infinity : config?.min}
-            max={config?.max === 0 ? Infinity : config?.max}
+            min={min === 0 ? Infinity : min}
+            max={max === 0 ? Infinity : max}
             type="number"
             onChange={(e) => {
               const value = e.target.value;
@@ -133,11 +152,7 @@ const RepeatField = ({
         </div>
       </div>
       {/* required message */}
-      <div>
-        <p className="text-white text-sm">
-          {isRequired && "Field is Required"}
-        </p>
-      </div>
+      {isRequired && <p className="text-red-500 text-sm">Field is Required</p>}
     </div>
   );
 };
