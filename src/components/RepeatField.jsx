@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Input } from "./ui/input";
 import {
+  ArrowDataTransferHorizontalIcon,
   Delete01Icon,
+  InfinityIcon,
   InformationCircleIcon,
+  ShuffleIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
@@ -11,7 +14,6 @@ import { debounceFn } from "../lib/utils";
 
 const RepeatField = ({
   label = "Repeat",
-
   tooltipContent = "Repeat Value",
   value = 0,
   config = {
@@ -21,11 +23,17 @@ const RepeatField = ({
   isRequired = false,
   onUpdateValue = () => {},
   onDisabledUpdate = () => {},
+  onUpdateYoyo = () => {},
   onDelete,
   isCustomAnim = true,
 }) => {
   const [inputValue, setInputValue] = useState(value ?? 0);
   const [isDataValid, setIsDataValid] = useState(false);
+
+  const updateRepeat = (val) => {
+    setInputValue(val);
+    onUpdateValue(val);
+  };
 
   const handleInput = debounceFn((rewValue) => {
     if (rewValue === "" || rewValue === "-") return;
@@ -36,14 +44,24 @@ const RepeatField = ({
     if (config?.min !== 0 || config?.max !== 0) {
       if (currentValue < config?.min) currentValue = config?.min;
       if (currentValue > config?.max) currentValue = config?.max;
-      setInputValue(currentValue);
-      onUpdateValue(currentValue);
+
+      updateRepeat(currentValue);
+      onUpdateYoyo(false);
       return;
     }
 
-    setInputValue(currentValue);
-    onUpdateValue(currentValue);
+    updateRepeat(currentValue);
   }, 150);
+
+  const setInfinity = () => {
+    updateRepeat(-1);
+    onUpdateYoyo(false);
+  };
+
+  const setShuffle = () => {
+    updateRepeat(1);
+    onUpdateYoyo(true);
+  };
 
   return (
     <div className="p-2">
@@ -66,7 +84,7 @@ const RepeatField = ({
           </Tooltip>
         </div>
 
-        {/* right add + delete button */}
+        {/* right */}
         <div className="flex items-center gap-2">
           <Input
             placeholder="Add Value"
@@ -81,6 +99,28 @@ const RepeatField = ({
               handleInput(value);
             }}
           />
+          {/* Infinity */}
+          <Button
+            size="icon"
+            onClick={setInfinity}
+            className="bg-[#3F3F46] w-8.5 h-8.5 rounded-md hover:bg-none"
+          >
+            <HugeiconsIcon icon={InfinityIcon} className="text-[#A1A1AA]" />
+          </Button>
+
+          {/* Shuffle */}
+          <Button
+            size="icon"
+            onClick={setShuffle}
+            className="bg-[#3F3F46] w-8.5 h-8.5 rounded-md hover:bg-none"
+          >
+            <HugeiconsIcon
+              icon={ArrowDataTransferHorizontalIcon}
+              className="text-[#A1A1AA]"
+            />
+          </Button>
+
+          {/* delete button */}
           {isCustomAnim && (
             <Button size="icon">
               <HugeiconsIcon

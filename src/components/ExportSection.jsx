@@ -10,7 +10,7 @@ const ExportSection = () => {
   const [animationData, setAnimationData] = useState([]);
 
   useEffect(() => {
-    fetch("/exportData.json")
+    fetch("/animationData.json")
       .then((res) => res.json())
       .then((json) => setAnimationData(json))
       .catch(console.error);

@@ -12,7 +12,7 @@ const ImportSection = () => {
 
   const handleFile = (file) => {
     if (!isValidJson(file)) {
-      setError("Only JSON files are allowed");
+      // setError("Only JSON files are allowed");
       setFile(null);
       return;
     }
@@ -71,9 +71,9 @@ const ImportSection = () => {
           onChange={(e) => handleFile(e.target.files[0])}
         />
 
-        <Button 
-        onClick={() => inputRef.current.click()}
-        className="bg-[#3F3F46] w-22 h-7.5 px-3 py-1.5 rounded-md text-[#FAFAFA] text-[13px] font-normal leading-4.5"
+        <Button
+          onClick={() => inputRef.current.click()}
+          className="bg-[#3F3F46] w-22 h-7.5 px-3 py-1.5 rounded-md text-[#FAFAFA] text-[13px] font-normal leading-4.5"
         >
           Browse file
         </Button>

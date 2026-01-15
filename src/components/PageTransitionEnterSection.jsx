@@ -111,7 +111,7 @@ const PageTransitionEnterSection = () => {
                     const isAdded = item.key in pageTransitionConfig;
 
                     return (
-                      <button
+                      <div
                         key={item.key}
                         disabled={isAdded}
                         onClick={() => addProperty(item.key)}
@@ -136,7 +136,7 @@ const PageTransitionEnterSection = () => {
                           </TooltipContent>
                         </Tooltip>
                         {item.title}
-                      </button>
+                      </div>
                     );
                   })}
                 </div>
