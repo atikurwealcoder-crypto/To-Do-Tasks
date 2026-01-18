@@ -10,20 +10,24 @@ import { debounceFn } from "../lib/utils";
 import { Button } from "./ui/button";
 
 const TextField = ({
-  label = "Trigger",
-  tooltipContent = "Give a Value",
+  property = {},
   value = "",
-  isRequired = false,
-  isCustomAnim = true,
-  onUpdateValue = () => {},
-  onDisabledUpdate = () => {},
   onDelete = () => {},
+  onDisabledUpdate = () => {},
+  onValueChange = () => {},
 }) => {
+  const {
+    title = "Trigger",
+    tooltipContent = "Enter the value.",
+    isRequired = false,
+    isCustomAnim = false,
+    ...rest
+  } = property || {};
   const [inputValue, setInputValue] = useState(value ?? "");
   const [isDataValid, setIsDataValid] = useState(false);
 
   const handleInput = debounceFn((newValue) => {
-    onUpdateValue(newValue);
+    onValueChange(newValue);
   }, 150);
 
   return (
@@ -31,7 +35,7 @@ const TextField = ({
       <div className="flex flex-col justify-between gap-3 rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white text-sm">{label}</h2>
+          <h2 className="text-white text-sm">{title}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>

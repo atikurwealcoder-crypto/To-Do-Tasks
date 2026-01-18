@@ -12,20 +12,22 @@ import { Button } from "./ui/button";
 import { debounceFn } from "../lib/utils";
 
 const NumberField2 = ({
-  label = "Delay",
-  tooltipContent = "Give a Value",
+  property = {},
   value = 0,
-  config = {
-    min: 0,
-    max: 0,
-    step: 0.1,
-  },
-  isRequired = false,
-  onUpdateValue = () => {},
+  onDelete = () => {},
   onDisabledUpdate = () => {},
-  isCustomAnim = true,
-  onDelete,
+  onValueChange = () => {},
 }) => {
+  const {
+    title = "title",
+    tooltipContent = "Enter the value.",
+    isRequired = false,
+    isCustomAnim = false,
+    min = 0,
+    max = 0,
+    step = 0.1,
+    ...rest
+  } = property || {};
   const [inputValue, setInputValue] = useState(value ?? 0);
   const [isDataValid, setIsDataValid] = useState(false);
 
@@ -36,18 +38,18 @@ const NumberField2 = ({
     let updateValue = Number(rawValue);
     if (Number.isNaN(updateValue)) return;
 
-    if (config?.min !== 0 || config?.max !== 0) {
-      if (updateValue < config?.min) updateValue = config?.min;
-      if (updateValue > config?.max) updateValue = config?.max;
+    if (min !== 0 || max !== 0) {
+      if (updateValue < min) updateValue = min;
+      if (updateValue > max) updateValue = max;
 
       setInputValue(updateValue);
-      onUpdateValue(updateValue);
+      onValueChange(updateValue);
       return;
     }
     updateValue = round(updateValue);
 
     setInputValue(updateValue);
-    onUpdateValue(updateValue);
+    onValueChange(updateValue);
   };
 
   // input handler
@@ -65,7 +67,7 @@ const NumberField2 = ({
       <div className="flex flex-col justify-between gap-3 w-97 h-8.5 mx-auto rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white w-9.25 text-sm">{label}</h2>
+          <h2 className="text-white w-9.25 text-sm">{ title}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>
@@ -88,9 +90,9 @@ const NumberField2 = ({
               placeholder="Add Value"
               className="flex items-center justify-center w-62.5"
               value={inputValue}
-              min={config?.min === 0 ? Infinity : config?.min}
-              max={config?.max === 0 ? Infinity : config?.max}
-              step={config.step}
+              min={min === 0 ? Infinity : min}
+              max={max === 0 ? Infinity : max}
+              step={step}
               type="number"
               onChange={(e) => {
                 const value = e.target.value;

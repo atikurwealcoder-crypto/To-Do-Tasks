@@ -10,28 +10,32 @@ import {
 import { Button } from "./ui/button";
 
 const SwitchField = ({
-  label = "Enable Split Text",
-  tooltipContent = "",
+  property = {},
   value = false,
-  isRequired = false,
-  onUpdateValue = () => {},
+  onValueChange = () => {},
   onDisabledUpdate = () => {},
-  isCustomAnim = true,
   onDelete = () => {},
 }) => {
+  const {
+    title = "title",
+    tooltipContent = "Enable functionality",
+    isRequired = false,
+    isCustomAnim = false,
+    ...rest
+  } = property || {};
   const [toggleValue, setToggleValue] = useState(Boolean(value));
   const [isDataValid, setIsDataValid] = useState(false);
 
   const handleToggle = (checked) => {
     setToggleValue(checked);
-    onUpdateValue(checked);
+    onValueChange(checked);
   };
   return (
     <div className="p-2">
       <div className="flex flex-col justify-between gap-3 rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-[#FAFAFA] text-[15px]">{label}</h2>
+          <h2 className="text-[#FAFAFA] text-[15px]">{title}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>

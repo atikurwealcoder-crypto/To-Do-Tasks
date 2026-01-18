@@ -8,16 +8,20 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
 
-export default function ColorPickerField({
-  label = "Background",
-  tooltipContent = "Select a color",
+const ColorPickerField = ({
+  property = {},
   value = "#000000",
-  isRequired = false,
-  onUpdateValue = () => {},
-  onDisabledUpdate = () => {},
   onDelete = () => {},
-  isCustomAnim = true,
-}) {
+  onDisabledUpdate = () => {},
+  onValueChange = () => {},
+}) => {
+  const {
+    title = "Background",
+    tooltipContent = "Select your color.",
+    isRequired = false,
+    isCustomAnim = false,
+    ...rest
+  } = property || {};
   const [color, setColor] = useState((value || "#000000").toUpperCase());
   const [error, setError] = useState("");
   const colorInputRef = useRef(null);
@@ -48,7 +52,7 @@ export default function ColorPickerField({
     }
     setError("");
     setColor(selectedColor);
-    onUpdateValue(selectedColor);
+    onValueChange(selectedColor);
   };
 
   return (
@@ -56,7 +60,7 @@ export default function ColorPickerField({
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         {/* label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white text-sm">{label}</h2>
+          <h2 className="text-white text-sm">{title}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>
@@ -113,4 +117,6 @@ export default function ColorPickerField({
       {error && <p className="text-red-400 text-sm">{error}</p>}
     </div>
   );
-}
+};
+
+export default ColorPickerField;

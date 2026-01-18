@@ -16,16 +16,24 @@ import Wheeler from "./Wheeler";
 import { debounceFn } from "../lib/utils";
 
 const RotationField = ({
-  label = "Rotate",
-  tooltipContent = "Adjust Rotate Value",
+  property = {},
   value = 0,
-  config = { min: 0, max: 360 },
-  isRequired = false,
-  onUpdateValue = () => {},
+  onValueChange = () => {},
   onDisabledUpdate = () => {},
-  onDelete,
-  isCustomAnim = true,
+  onDelete = () => {},
 }) => {
+  const {
+    title = "Rotate",
+    tooltipContent = "Adjust Rotate Value",
+    min = 0,
+    max = 360,
+    step = 1,
+    path = "",
+    isRequired = false,
+    isCustomAnim = true,
+    ...rest
+  } = property || {};
+
   const [inputValue, setInputValue] = useState(value ?? 0);
   const [isDataValid, setIsDataValid] = useState(false);
 
@@ -35,9 +43,9 @@ const RotationField = ({
     let currentValue = Number(rawValue);
     if (Number.isNaN(currentValue)) return;
 
-    currentValue = clamp(currentValue, config.min, config.max);
+    currentValue = clamp(currentValue, min, max);
     setInputValue(currentValue);
-    onUpdateValue(currentValue);
+    onValueChange(currentValue);
   };
 
   // input handler
@@ -50,7 +58,7 @@ const RotationField = ({
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         {/* label */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white text-sm">{label}</h2>
+          <h2 className="text-white text-sm">{title}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>
@@ -74,8 +82,8 @@ const RotationField = ({
             </PopoverTrigger>
             <PopoverContent>
               <Wheeler
-                min={config?.min}
-                max={config?.max}
+                min={min}
+                max={max}
                 value={inputValue}
                 onChange={handleInput}
               />
@@ -85,8 +93,8 @@ const RotationField = ({
           <Input
             type="number"
             value={inputValue}
-            min={config?.min}
-            max={config?.max}
+            min={min}
+            max={max}
             className="w-28"
             onChange={(e) => handleInput(e.target.value)}
           />

@@ -15,26 +15,32 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
 
 const SelectField = ({
-  label = "Method",
-  tooltipContent = "Select Method",
+  property = {},
   value = "",
-  fieldData = [
-    { title: "To", value: "to" },
-    { title: "From", value: "from" },
-    { title: "Set", value: "set" },
-  ],
-  isRequired = false,
-  isCustomAnim = true,
-  onDelete = () => {},
   onDisabledUpdate = () => {},
-  onUpdateValue = () => {},
+  onValueChange = () => {},
+  onDelete = () => {},
 }) => {
+  const {
+    title = "Method",
+    tooltipContent = "Select Method",
+    fieldData = [
+      { title: "To", value: "to" },
+      { title: "From", value: "from" },
+      { title: "Set", value: "set" },
+    ],
+    path = "",
+    isRequired = false,
+    isCustomAnim = true,
+    ...rest
+  } = property || {};
+
   const [selectedValue, setSelectedValue] = useState(value ?? "");
   const [isDataValid, setIsDataValid] = useState(false);
 
   const handleSelect = (value) => {
     setSelectedValue(value);
-    onUpdateValue(value);
+    onValueChange(value);
   };
 
   return (
@@ -42,7 +48,7 @@ const SelectField = ({
       <div className="flex flex-col justify-between gap-3 rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white text-sm">{label}</h2>
+          <h2 className="text-white text-sm">{title}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>

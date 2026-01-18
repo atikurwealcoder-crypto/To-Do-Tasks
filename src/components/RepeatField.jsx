@@ -14,13 +14,13 @@ import { debounceFn } from "../lib/utils";
 const RepeatField = ({
   property = {},
   value = { repeat: 0, yoyo: false },
-  onUpdateValue = () => {},
+  onValueChange = () => {},
   onDisabledUpdate = () => {},
   onDelete = () => {},
 }) => {
   // default value
   const {
-    title = "title",
+    title = "Repeat",
     tooltipContent = "Enter the value.",
     isRequired = false,
     isCustomAnim = true,
@@ -34,7 +34,7 @@ const RepeatField = ({
   const [isDataValid, setIsDataValid] = useState(false);
 
   const updateValue = (newValues) => {
-    onUpdateValue({
+    onValueChange({
       ...value,
       ...newValues,
     });

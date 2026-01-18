@@ -7,15 +7,29 @@ import {
   CancelCircleIcon,
 } from "@hugeicons/core-free-icons";
 import { Button } from "./ui/button";
-const SearchField = () => {
+
+const SearchField = ({
+  property = {},
+  value = [],
+  onClearAll = () => {},
+  onRemoveRecent = () => {},
+  onUpdateValue = () => {},
+  onDelete = () => {},
+  onDisabledUpdate = () => {},
+}) => {
+  const {
+    title = "Recent Searches",
+    placeholder="Search animation or page",
+    allClearLabel="Clear All",
+    ...rest
+  } = property || {};
+
   const [animationData, setAnimationData] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [recentSearches, setRecentSearches] = useState([]);
   const [results, setResults] = useState([]);
   const [isSimilar, setIsSimilar] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-
-  // console.log("search text", searchText);
 
   useEffect(() => {
     fetch("/animationData.json")
@@ -39,7 +53,7 @@ const SearchField = () => {
     }
 
     const filtered = animationData.filter((item) =>
-      item.label.toLowerCase().includes(query)
+      item.label.toLowerCase().includes(query),
     );
 
     setResults(filtered);
@@ -51,26 +65,19 @@ const SearchField = () => {
       const exists = prev.find((x) => x.id === item.id);
       if (exists) return prev;
 
-      return [item, ...prev].slice(0, 5);
+      return [item, ...prev];
     });
 
+    onUpdateValue(item);
     setSearchText("");
     setResults([]);
   };
-
-  // single search item remover
-  const removeRecent = (id) => {
-    setRecentSearches((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  // all search item remover
-  const clearAll = () => setRecentSearches([]);
 
   return (
     <div className="w-89.5 min-h-52 rounded-md bg-[#27272A] p-3.75 space-y-5">
       <div className="space-y-1">
         {/* Search Input */}
-        <div className="bg-[#3F3F46] flex items-center rounded-4xl py-1.5 pl-3 pr-1.5">
+        <div className="bg-[#3F3F46] flex items-center rounded-4xl py-1.5 pl-3 pr-1.5 w-82 h-10">
           <HugeiconsIcon
             icon={Search01Icon}
             className="text-[#E4E4E7] w-5 h-5"
@@ -80,8 +87,8 @@ const SearchField = () => {
             onChange={(e) => handleSearch(e.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            placeholder="Search animation or page"
-            className=" text-white w-82 h-10 placeholder:text-[#A1A1AA] text-base font-normal leading-5 shadow-none "
+            placeholder={placeholder}
+            className=" text-[#FAFAFA] placeholder:text-[#A1A1AA] placeholder:text-base text-base font-normal leading-5 shadow-none flex-1"
           />
 
           {isFocused && (
@@ -100,15 +107,15 @@ const SearchField = () => {
 
         {/* Search Results */}
         {results.length > 0 && (
-          <div className="bg-[#424348] rounded-md">
+          <div className="bg-[#424348] rounded-md max-h-36 overflow-y-auto">
             {results.map((item) => (
-              <button
+              <Button
                 key={item.id}
                 onClick={() => addToRecent(item)}
-                className="w-full text-left px-3 py-2 text-sm text-[#b5b7bd]"
+                className="w-full justify-start px-3 text-sm text-[#b5b7bd] font-normal hover:bg-[#52525B]"
               >
                 {item.label}
-              </button>
+              </Button>
             ))}
           </div>
         )}
@@ -121,36 +128,44 @@ const SearchField = () => {
       </div>
 
       {/* Recent Searches */}
-      <div className="space-y-2 w-82">
+      <div className="space-y-4 w-82 max-h-29.5 overflow-y-auto px-1">
         <div className="flex justify-between items-center">
-          <p className="text-sm font-normal leading-4.5 text-[#FAFAFA]">Recent Searches</p>
+          <p className="text-sm font-normal leading-4.5 text-[#FAFAFA]">
+            {title}
+          </p>
           {recentSearches.length > 0 && (
             <button
-              onClick={clearAll}
-              className="text-sm font-normal leading-4.5 text-[#FAFAFA]"
+              onClick={() => {
+                onClearAll(console.log("All Clear button clicked"));
+              }}
+              className="text-sm font-normal leading-4.5 text-[#FAFAFA] cursor-pointer"
             >
-              Clear All
+              {allClearLabel}
             </button>
           )}
         </div>
 
-        {recentSearches.map((item) => (
-          <div
-            key={item.id}
-            className="flex items-center justify-between text-sm text-[#A1A1AA] space-y-3"
-          >
-            <span>{item.label}</span>
-            <Button
-             onClick={() => removeRecent(item.id)}
-             className="bg-[#3F3F46] w-5 h-5 rounded-full"
-             >
-              <HugeiconsIcon
-                icon={Delete01Icon}
-                className="w-4 h-4 text-[#A1A1AA]"
-              />
-            </Button>
-          </div>
-        ))}
+        <div className="space-y-3 overflow-y-auto">
+          {recentSearches.map((item) => (
+            <div
+              key={item.id}
+              className="flex items-center justify-between text-sm text-[#A1A1AA]"
+            >
+              <span>{item.label}</span>
+              <button
+                onClick={() => {
+                  onRemoveRecent(console.log("Remove recent button clicked"));
+                }}
+                className="bg-[#3F3F46] w-5 h-5 rounded-full flex items-center justify-center cursor-pointer"
+              >
+                <HugeiconsIcon
+                  icon={Delete01Icon}
+                  className="w-2.5 h-2.5 text-[#E4E4E7]"
+                />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

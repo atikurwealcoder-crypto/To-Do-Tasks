@@ -11,20 +11,24 @@ import { Button } from "./ui/button";
 import { debounceFn } from "../lib/utils";
 
 const SliderField = ({
-  label = "Scale",
-  tooltipContent = "Adjust scale value",
+  property = {},
   value = 0,
-  config = {
-    min: 0,
-    max: 8000,
-    step: 1,
-  },
-  isRequired = false,
-  onUpdateValue = () => {},
+  onValueChange = () => {},
   onDisabledUpdate = () => {},
-  onDelete,
-  isCustomAnim = true,
+  onDelete = () => {},
 }) => {
+  const {
+    title = "Scale",
+    tooltipContent = "Adjust scale value",
+    min = 0,
+    max = 8000,
+    step = 1,
+    path = "",
+    isRequired = false,
+    isCustomAnim = true,
+    ...rest
+  } = property || {};
+
   const [inputValue, setInputValue] = useState(value ?? 0);
   const [isDataValid, setIsDataValid] = useState(false);
 
@@ -35,15 +39,15 @@ const SliderField = ({
     let currentValue = Number(rewValue);
     if (isNaN(currentValue)) return;
 
-    if (config?.min !== 0 || config?.max !== 0) {
-      if (currentValue < config?.min) currentValue = config?.min;
-      if (currentValue > config?.max) currentValue = config?.max;
+    if (min !== 0 || max !== 0) {
+      if (currentValue < min) currentValue = min;
+      if (currentValue > max) currentValue = max;
       setInputValue(currentValue);
-      onUpdateValue(currentValue);
+      onValueChange(currentValue);
       return;
     }
     setInputValue(currentValue);
-    onUpdateValue(currentValue);
+    onValueChange(currentValue);
   }, 150);
 
   return (
@@ -51,7 +55,7 @@ const SliderField = ({
       <div className="flex flex-col gap-3 rounded-lg  sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white text-sm">{label}</h2>
+          <h2 className="text-white text-sm">{title}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>
@@ -71,9 +75,9 @@ const SliderField = ({
         <div className="flex-1">
           <Slider
             value={[inputValue]}
-            min={config?.min}
-            max={config?.max}
-            step={config?.step}
+            min={min}
+            max={max}
+            step={step}
             onValueChange={(v) => setInputValue(v)}
             className="flex-1"
           />
@@ -85,8 +89,8 @@ const SliderField = ({
             placeholder="Add Value"
             className="flex items-center justify-center w-28"
             value={inputValue}
-            min={config?.min === 0 ? Infinity : config?.min}
-            max={config?.max === 0 ? Infinity : config?.max}
+            min={min === 0 ? Infinity : min}
+            max={max === 0 ? Infinity : max}
             type="number"
             onChange={(e) => {
               const value = e.target.value;

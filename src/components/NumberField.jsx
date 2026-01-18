@@ -10,19 +10,23 @@ import { Button } from "./ui/button";
 import { debounceFn } from "../lib/utils";
 
 const NumberField = ({
-  label = "MinWidth",
-  tooltipContent = "MinWidth Value",
+  property = {},
   value = 0,
-  config = {
-    min: 0,
-    max: 0,
-  },
-  isRequired = false,
-  onUpdateValue = () => {},
+  onValueChange = () => {},
   onDisabledUpdate = () => {},
-  isCustomAnim = true,
-  onDelete,
+  onDelete = () => {},
 }) => {
+  const {
+    title = "MinWidth",
+    tooltipContent = "MinWidth Value",
+    min = 0,
+    max = 0,
+    path = "",
+    isRequired = false,
+    isCustomAnim = true,
+    ...rest
+  } = property || {};
+
   const [inputValue, setInputValue] = useState(value ?? 0);
   const [isDataValid, setIsDataValid] = useState(false);
 
@@ -32,15 +36,15 @@ const NumberField = ({
     let currentValue = Number(rewValue);
     if (isNaN(currentValue)) return;
 
-    if (config?.min !== 0 || config?.max !== 0) {
-      if (currentValue < config?.min) currentValue = config?.min;
-      if (currentValue > config?.max) currentValue = config?.max;
+    if (min !== 0 || max !== 0) {
+      if (currentValue < min) currentValue = min;
+      if (currentValue > max) currentValue = max;
       setInputValue(currentValue);
-      onUpdateValue(currentValue);
+      onValueChange(currentValue);
       return;
     }
     setInputValue(currentValue);
-    onUpdateValue(currentValue);
+    onValueChange(currentValue);
   }, 150);
 
   return (
@@ -48,7 +52,7 @@ const NumberField = ({
       <div className="flex flex-col justify-between gap-3 w-97.5 h-8.5 mx-auto rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white text-sm w-16.5 h-4.5">{label}</h2>
+          <h2 className="text-white text-sm w-16.5 h-4.5">{title}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>
@@ -70,8 +74,8 @@ const NumberField = ({
             placeholder="Add Value"
             className="flex items-center justify-center w-28.5"
             value={inputValue}
-            min={config?.min === 0 ? Infinity : config?.min}
-            max={config?.max === 0 ? Infinity : config?.max}
+            min={min === 0 ? Infinity : min}
+            max={max === 0 ? Infinity : max}
             type="number"
             onChange={(e) => {
               const value = e.target.value;

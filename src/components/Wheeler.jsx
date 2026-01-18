@@ -1,31 +1,21 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
-
-const Wheeler = ({
-  min,
-  max,
-  value,
-  size = 70,
-  onChange = () => {},
-}) => {
+const Wheeler = ({ min, max, value, size = 70, onChange = () => {} }) => {
+  
   const wheelRef = useRef(null);
   const isPointerDownRef = useRef(false);
+
+  const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 
   // Convert value <-> angle (0..360)
   const valueToAngle = useCallback(
     (v) => ((clamp(v, min, max) - min) / (max - min)) * 360,
-    [min, max]
+    [min, max],
   );
 
   const angleToValue = useCallback(
     (a) => min + (a / 360) * (max - min),
-    [min, max]
+    [min, max],
   );
 
   const [angle, setAngle] = useState(() => valueToAngle(value));
@@ -56,7 +46,7 @@ const Wheeler = ({
       const nextValue = angleToValue(normalized);
       onChange(Math.round(nextValue));
     },
-    [angleToValue, onChange]
+    [angleToValue, onChange],
   );
 
   const onPointerDown = useCallback(
@@ -69,7 +59,7 @@ const Wheeler = ({
       // IMPORTANT: update immediately on click
       updateFromPointer(e.clientX, e.clientY);
     },
-    [updateFromPointer]
+    [updateFromPointer],
   );
 
   const onPointerMove = useCallback(
@@ -78,7 +68,7 @@ const Wheeler = ({
       e.preventDefault();
       updateFromPointer(e.clientX, e.clientY);
     },
-    [updateFromPointer]
+    [updateFromPointer],
   );
 
   const onPointerUp = useCallback((e) => {
