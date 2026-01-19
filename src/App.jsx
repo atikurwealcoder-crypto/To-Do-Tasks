@@ -14,12 +14,14 @@ import DynamicModal from "./components/DynamicModal";
 import ModalInfoInputField from "./components/ModalInfoInputField";
 import ModalInfoTextAreaField from "./components/ModalInfoTextAreaField";
 import SearchField from "./components/SearchField";
+import WidthHeightField from "./components/WidthHeightField";
+import PaddingField from "./components/PaddingField";
 
 function App() {
   return (
-    <div className="mt-10 max-w-110 mx-auto bg-black p-5">
+    <div className="mt-10 max-w-110 mx-auto bg-black p-5 space-y-3">
       <Toaster richColors position="top-right" />
-      <SliderField />
+      {/* <SliderField />
       <RepeatField />
       <RotationField />
       <NumberField />
@@ -28,7 +30,9 @@ function App() {
       <SwitchField />
       <ClassSelectionField />
       <NumberField2 />
-      <ColorPickerField/>
+      <ColorPickerField /> */}
+      <WidthHeightField />
+      <PaddingField/>
       {/* <GlobalSettingModal/> */}
       {/* <DynamicModal /> */}
       {/* <ModalInfoInputField />
