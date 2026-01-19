@@ -37,8 +37,8 @@ const PaddingField = ({
   onDelete = () => {},
 }) => {
   const {
-    title = "MinWidth",
-    tooltipContent = "MinWidth Value",
+    title = "Padding",
+    tooltipContent = "Padding Value",
     min = 0,
     max = 0,
     fieldData = [
@@ -63,7 +63,6 @@ const PaddingField = ({
   const [isDataValid, setIsDataValid] = useState(false);
 
   const [unit, setUnit] = useState(selectedValue || "rem");
-
   const [sides, setSides] = useState({
     top: 0,
     right: 0,
@@ -130,10 +129,12 @@ const PaddingField = ({
 
   return (
     <div className="w-88.75 h-7 p-0.5">
-      <div className="flex flex-col justify-between gap-3 mx-auto rounded-lg sm:flex-row sm:items-center">
+      <div className="flex flex-col justify-between md:flex-row md:items-center">
         {/* left title + tooltip */}
-        <div className="flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white text-sm w-16.5 h-4.5">{title}</h2>
+        <div className="w-16.5 h-4.5 flex items-center gap-3 text-[#E4E4E7]">
+          <h2 className="text-white text-[11.5px] font-normal leading-4.5">
+            {title}
+          </h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>
@@ -149,93 +150,105 @@ const PaddingField = ({
           </Tooltip>
         </div>
 
-        {/* right add + delete button */}
-        <div className="flex items-center gap-3 w-38.5 h-7">
-          <div className="relative">
-            <Input
-              placeholder="Add Value"
-              className="flex items-center justify-center w-32.5 h-7"
-              value={getInputDisplayValue()}
-              min={min === 0 ? Infinity : min}
-              max={max === 0 ? Infinity : max}
-              type="text"
-              disabled={hasCustomSides}
-              onChange={(e) => {
-                if (hasCustomSides) return;
+        {/* right input + delete button */}
+        <div className="w-47.5 h-7 flex items-center gap-3">
+          {/* input and custom popover */}
+          <div className="flex items-center gap-2 w-41.5 h-7">
+            <div className="relative">
+            {/* input field */}
+              <Input
+                placeholder="Add Value"
+                className="flex items-center justify-center w-32.5 h-7 text-[11.5px] font-normal leading-4.5"
+                value={getInputDisplayValue()}
+                min={min === 0 ? Infinity : min}
+                max={max === 0 ? Infinity : max}
+                type="text"
+                disabled={hasCustomSides}
+                onChange={(e) => {
+                  if (hasCustomSides) return;
+                  const value = e.target.value;
+                  setInputValue(value);
+                  handleInput(value);
+                }}
+              />
 
-                const value = e.target.value;
-                setInputValue(value);
-                handleInput(value);
-              }}
-            />
-            <Select value={selectedValue} onValueChange={handleSelect}>
-              <SelectTrigger className="absolute top-0.75 right-0.5 w-8 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] text-[#A1A1AA] gap-0.5">
-                <SelectValue placeholder="rem" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">
-                {fieldData.map((field, index) => (
-                  <SelectItem
-                    key={index}
-                    value={field.value}
-                    className="text-[#A1A1AA] focus:bg-[#27272A] focus:text-[#A1A1AA] w-10.5 h-5.5 pl-1.5 py-0.5 pr-0.5 text-[11.5px]"
-                  >
-                    {field.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              {/* unit selection button */}
+              <Select value={selectedValue} onValueChange={handleSelect}>
+                <SelectTrigger className="absolute top-0.75 right-0.5 w-8 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] text-[#A1A1AA] gap-0.5">
+                  <SelectValue placeholder="rem" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">
+                  {fieldData.map((field, index) => (
+                    <SelectItem
+                      key={index}
+                      value={field.value}
+                      className="text-[#A1A1AA] focus:bg-[#27272A] focus:text-[#A1A1AA] w-10.5 h-5.5 pl-1.5 py-0.5 pr-0.5 text-[11.5px]"
+                    >
+                      {field.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* custom padding selection popover button */}
+            <Popover>
+              <PopoverTrigger>
+                <Button className="w-7 h-7 rounded-md bg-[#3F3F46] px-0">
+                  <HugeiconsIcon
+                    icon={DashedLine02Icon}
+                    color="#A1A1AA"
+                    strokeWidth={1.5}
+                  />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="w-57.5 h-35 bg-[#3F3F46] rounded-md p-3 grid grid-cols-2 gap-2.5">
+                  {popoverData.map((data) => (
+                    <div key={data.key} className="space-y-1.5">
+                      <h1 className="text-[#E4E4E7] text-[11.5px] font-normal leading-4.5">
+                        {data.title}
+                      </h1>
+                      <Button
+                        onClick={() => increaseSide(data.key)}
+                        className="flex justify-between items-center bg-[#27272A] w-24.25 h-7 py-1.25 pl-2.5 pr-3 rounded-md text-[#A1A1AA]"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <HugeiconsIcon
+                            icon={DashedLine02Icon}
+                            size={24}
+                            color="#A1A1AA"
+                            strokeWidth={1.5}
+                          />
+                          <span className="text-[11.5px] font-normal leading-4.5">
+                            {sides[data.key]}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="text-[11.5px] font-normal leading-4.5">
+                            {unit}
+                          </p>
+                        </div>
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
 
-          {/* custom padding selection button */}
-          <Popover>
-            <PopoverTrigger>
-              <Button className="w-7 h-7 rounded-md bg-[#3F3F46] px-0">
+          {/* delete button */}
+          <div>
+            {isCustomAnim && (
+              <Button onClick={onDelete} className="has-[>svg]:px-0">
                 <HugeiconsIcon
-                  icon={DashedLine02Icon}
-                  size={24}
-                  color="#A1A1AA"
-                  strokeWidth={1.5}
+                  icon={Delete01Icon}
+                  size={5}
+                  className="text-[#A1A1AA] w-3 h-3"
                 />
               </Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <div className="w-57.5 h-35 bg-[#3F3F46] rounded-md p-3 grid grid-cols-2 gap-3">
-                {popoverData.map((data) => (
-                  <div key={data.key} className="space-y-1.5">
-                    <h1 className="text-[#E4E4E7]">{data.title}</h1>
-                    <Button
-                      onClick={() => increaseSide(data.key)}
-                      className="flex justify-between items-center bg-[#27272A] w-24.25 h-7 py-1.25 pl-2.5 pr-3 rounded-md text-[#A1A1AA]"
-                    >
-                      <div className="flex items-center gap-1.5">
-                        <HugeiconsIcon
-                          icon={DashedLine02Icon}
-                          size={24}
-                          color="#A1A1AA"
-                          strokeWidth={1.5}
-                        />
-                        <span>{sides[data.key]}</span>
-                      </div>
-                      <div>
-                        <p>{unit}</p>
-                      </div>
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-
-          {/* delete button */}
-          {isCustomAnim && (
-            <Button onClick={onDelete} className="has-[>svg]:px-0">
-              <HugeiconsIcon
-                icon={Delete01Icon}
-                size={5}
-                className="text-[#A1A1AA] w-3 h-3"
-              />
-            </Button>
-          )}
+            )}
+          </div>
         </div>
       </div>
 

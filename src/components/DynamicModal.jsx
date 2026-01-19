@@ -9,46 +9,53 @@ import {
 } from "@hugeicons/core-free-icons";
 
 const DynamicModal = ({
-  property = {
-    title: "Draft Animation",
-    subtitle: "Your draft animation list",
-    count: 12,
-    headingIcon: <HugeiconsIcon icon={NoteEditIcon} className="w-6 h-6" />,
-    deleteBtn: {
-      icon: <HugeiconsIcon icon={Delete01Icon} className="w-4 h-4" />,
-      label: "Delete",
-    },
-    publishBtn: {
-      icon: <HugeiconsIcon icon={Tick02Icon} className="w-4 h-4" />,
-      label: "Publish",
-    },
-  },
-  children,
+  property = {},
+  onDisabledUpdate = () => {},
+  onValueChange = () => {},
   onClose = () => {},
   onDelete = () => {},
   onAccept = () => {},
+  children,
 }) => {
+  const {
+    title = "Draft Animation",
+    subtitle = "Your draft animation list",
+    count = 12,
+    headingIcon = <HugeiconsIcon icon={NoteEditIcon} className="w-6 h-6" />,
+    deleteBtn = {
+      icon: <HugeiconsIcon icon={Delete01Icon} className="w-4 h-4" />,
+      label: "Delete",
+    },
+    publishBtn = {
+      icon: <HugeiconsIcon icon={Tick02Icon} className="w-4 h-4" />,
+      label: "Publish",
+    },
+    isRequired = false,
+    isCustomAnim = true,
+    ...rest
+  } = property || {};
+
   return (
     <div className="w-99.5 max-h-97.5 rounded-md bg-[#27272A] p-3.75 flex flex-col gap-7.5">
       {/* Header*/}
       <div className="flex items-start justify-between">
         <div className="w-50.5 h-10.5 flex items-center gap-3">
           <div className="w-10 h-10 p-2 rounded-full bg-[#64964C] flex items-center justify-center text-[#FAFAFA]">
-            {property?.headingIcon}
+            {headingIcon}
           </div>
 
           <div className="space-y-1">
             <div className="flex items-center gap-1.5">
               <h2 className="text-[15px] font-medium text-[#FAFAFA] leading-5">
-                {property?.title ?? ""}
+                {title ?? ""}
               </h2>
               <span className="bg-[#64964C] w-6 h-4.5 rounded-2xl p-1.25 text-white font-[12px] flex items-center justify-center">
-                {property?.count ?? 0}
+                {count ?? 0}
               </span>
             </div>
 
             <p className="text-sm font-normal text-[#E4E4E7] leading-4.5">
-              {property?.subtitle ?? ""}
+              {subtitle ?? ""}
             </p>
           </div>
         </div>
@@ -70,15 +77,15 @@ const DynamicModal = ({
           onClick={onDelete}
           className="bg-[#3F3F46] w-43.5 h-9 rounded-md text-[15px] font-medium text-[#FAFAFA] leading-5"
         >
-          {property?.deleteBtn?.icon}
-          {property?.deleteBtn?.label}
+          {deleteBtn?.icon}
+          {deleteBtn?.label}
         </Button>
         <Button
           onClick={onAccept}
           className="bg-[#3F3F46] w-43.5 h-9 rounded-md text-[15px] font-medium text-[#FAFAFA] leading-5"
         >
-          {property?.publishBtn?.icon}
-          {property?.publishBtn?.label}
+          {publishBtn?.icon}
+          {publishBtn?.label}
         </Button>
       </div>
     </div>

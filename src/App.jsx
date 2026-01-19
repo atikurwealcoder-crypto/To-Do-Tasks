@@ -16,6 +16,8 @@ import ModalInfoTextAreaField from "./components/ModalInfoTextAreaField";
 import SearchField from "./components/SearchField";
 import WidthHeightField from "./components/WidthHeightField";
 import PaddingField from "./components/PaddingField";
+import StrokeField from "./components/StrokeField";
+import CodeblockField from "./components/CodeblockField";
 
 function App() {
   return (
@@ -32,7 +34,9 @@ function App() {
       <NumberField2 />
       <ColorPickerField /> */}
       <WidthHeightField />
-      <PaddingField/>
+      <PaddingField />
+      <StrokeField />
+      <CodeblockField/>
       {/* <GlobalSettingModal/> */}
       {/* <DynamicModal /> */}
       {/* <ModalInfoInputField />
