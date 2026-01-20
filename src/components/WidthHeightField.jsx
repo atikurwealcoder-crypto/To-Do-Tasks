@@ -18,7 +18,7 @@ import { debounceFn } from "../lib/utils";
 
 const WidthHeightField = ({
   property = {},
-  value = 0,
+  value = {},
   onValueChange = () => {},
   onDisabledUpdate = () => {},
   onDelete = () => {},
@@ -45,16 +45,21 @@ const WidthHeightField = ({
     ...rest
   } = property || {};
 
-  const [inputValue, setInputValue] = useState(value ?? 0);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [inputValue, setInputValue] = useState(value?.value ?? 0);
+  const [selectedUnit, setSelectedUnit] = useState(value?.unit ?? "px");
   const [isDataValid, setIsDataValid] = useState(false);
 
-  const handleSelect = (value) => {
-    console.log(value);
-    setSelectedValue(value);
-    onValueChange(value);
+  const updateValue = (next = {}) => {
+    const updatedValues = {
+      value: next?.value ?? inputValue ?? 0,
+      unit: next?.unit ?? selectedUnit ?? "px",
+    };
+
+    // console.log("sending to hoc: ",updatedValues);
+    onValueChange({ updatedValues });
   };
 
+  // input value and unit select handler
   const handleInput = debounceFn((rewValue) => {
     if (rewValue === "" || rewValue === "-") return;
 
@@ -65,19 +70,28 @@ const WidthHeightField = ({
       if (currentValue < min) currentValue = min;
       if (currentValue > max) currentValue = max;
       setInputValue(currentValue);
-      onValueChange(currentValue);
+      updateValue({ value: currentValue });
       return;
     }
+
     setInputValue(currentValue);
-    onValueChange(currentValue);
+    updateValue({ value: currentValue });
   }, 150);
+
+  // unit select handler
+  const handleSelect = (unit) => {
+    setSelectedUnit(unit);
+    updateValue({ unit: unit });
+  };
 
   return (
     <div className="w-88.75 h-7 p-0.5">
       <div className="flex flex-col justify-between gap-3 mx-auto rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="w-16.5 h-4.5 flex items-center gap-3 text-[#E4E4E7]">
-          <h2 className="text-white text-[11.5px] font-normal leading-4.5">{title}</h2>
+          <h2 className="text-white text-[11.5px] font-normal leading-4.5">
+            {title}
+          </h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <button>
@@ -109,11 +123,9 @@ const WidthHeightField = ({
                 handleInput(value);
               }}
             />
-            <Select value={selectedValue} onValueChange={handleSelect}>
-              <SelectTrigger
-                className="absolute top-0.75 right-0.5 w-8 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] text-[#A1A1AA] gap-0.5"
-              >
-                <SelectValue placeholder="%" />
+            <Select value={selectedUnit} onValueChange={handleSelect}>
+              <SelectTrigger className="absolute top-0.75 right-0.5 w-10.75 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] text-[#A1A1AA] gap-0.5">
+                <SelectValue placeholder={selectedUnit} />
               </SelectTrigger>
               <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">
                 {fieldData.map((field, index) => (
@@ -140,7 +152,7 @@ const WidthHeightField = ({
         </div>
       </div>
 
-        {/* required message */}
+      {/* required message */}
       {isRequired && isDataValid && (
         <p className="text-white text-sm">Field is Required</p>
       )}

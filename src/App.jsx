@@ -23,24 +23,24 @@ function App() {
   return (
     <div className="mt-10 max-w-110 mx-auto bg-black p-5 space-y-3">
       <Toaster richColors position="top-right" />
-      {/* <SliderField />
-      <RepeatField />
-      <RotationField />
-      <NumberField />
-      <SelectField />
-      <TextField />
-      <SwitchField />
-      <ClassSelectionField />
-      <NumberField2 />
-      <ColorPickerField /> */}
+      {/* <SliderField /> */}
+      {/* <RepeatField /> */}
+      {/* <RotationField /> */}
+      {/* <NumberField /> */}
+      {/* <SelectField /> */}
+      {/* <TextField /> */}
+      {/* <SwitchField /> */}
+      {/* <ClassSelectionField /> */}
+      {/* <NumberField2 /> */}
+      {/* <ColorPickerField /> */}
       <WidthHeightField />
       <PaddingField />
       <StrokeField />
       <CodeblockField/>
       {/* <GlobalSettingModal/> */}
       {/* <DynamicModal /> */}
-      {/* <ModalInfoInputField />
-      <ModalInfoTextAreaField /> */}
+      {/* <ModalInfoInputField /> */}
+      {/* <ModalInfoTextAreaField /> */}
       {/* <SearchField /> */}
     </div>
   );

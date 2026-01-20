@@ -18,7 +18,7 @@ import { debounceFn } from "../lib/utils";
 
 const StrokeField = ({
   property = {},
-  value = 0,
+  value = {},
   onValueChange = () => {},
   onDisabledUpdate = () => {},
   onDelete = () => {},
@@ -45,63 +45,57 @@ const StrokeField = ({
     ...rest
   } = property || {};
 
-  const [inputValue, setInputValue] = useState(value ?? 0);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [stroke, setStroke] = useState({
+    size: value?.size ?? 0,
+    unit: value?.unit ?? "px",
+    color: value?.color ?? "#000000",
+  });
   const [isDataValid, setIsDataValid] = useState(false);
-  const [color, setColor] = useState((value || "#000000").toUpperCase());
-  const [error, setError] = useState("");
   const colorInputRef = useRef(null);
 
-  const handleSelect = (value) => {
-    console.log(value);
-    setSelectedValue(value);
-    onValueChange(value);
+  // helper to send data to HOC
+  const updateStroke = (next) => {
+    const updatedValues = { ...stroke, ...next };
+    console.log(updatedValues)
+    setStroke(updatedValues);
+    onValueChange(updatedValues);
   };
-
-  const handleInput = debounceFn((rewValue) => {
-    if (rewValue === "" || rewValue === "-") return;
-
-    let currentValue = Number(rewValue);
-    if (isNaN(currentValue)) return;
-
-    if (min !== 0 || max !== 0) {
-      if (currentValue < min) currentValue = min;
-      if (currentValue > max) currentValue = max;
-      setInputValue(currentValue);
-      onValueChange(currentValue);
-      return;
-    }
-    setInputValue(currentValue);
-    onValueChange(currentValue);
-  }, 150);
 
   // hex code validation
   const isValidHex = (value) =>
     /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(value);
 
+  // input size value handler
+  const handleInputChange = debounceFn((rewValue) => {
+    if (rewValue === "" || rewValue === "-") return;
+
+    let currentValue = Number(rewValue);
+    if (isNaN(currentValue)) return;
+    updateStroke({ size: currentValue });
+  }, 150);
+
+  const handleUnitChange = (unit) => {
+    updateStroke({ unit });
+  };
+
   // handle input typing
   const handleColorInput = (rawColor) => {
-    const selectedColor = rawColor.toUpperCase();
-    setColor(selectedColor);
-
-    if (selectedColor === "" || isValidHex(selectedColor)) {
-      setError("");
-    } else {
-      setError("Hex color code is not valid");
-    }
+    const inputColor = rawColor.toUpperCase();
+    setStroke((prev) => ({
+      ...prev,
+      color: inputColor,
+    }));
+    // console.log(rawColor);
+    updateStroke({ color: inputColor });
   };
 
   // color picker handler
   const handleColorSelection = (rawColor) => {
     const selectedColor = rawColor.toUpperCase();
 
-    if (!isValidHex(selectedColor)) {
-      setError("Hex color code is not valid");
-      return;
-    }
-    setError("");
-    setColor(selectedColor);
-    onValueChange(selectedColor);
+    if (!isValidHex(selectedColor)) return;
+
+    updateStroke({ color: selectedColor });
   };
 
   return (
@@ -133,18 +127,14 @@ const StrokeField = ({
             <Input
               placeholder="Add Value"
               className="flex items-center justify-center w-32.5 h-7 text-[11.5px] font-normal leading-4.5"
-              value={inputValue}
+              value={stroke.size}
               min={min === 0 ? Infinity : min}
               max={max === 0 ? Infinity : max}
               type="number"
-              onChange={(e) => {
-                const value = e.target.value;
-                setInputValue(value);
-                handleInput(value);
-              }}
+              onChange={(e) => handleInputChange(e.target.value)}
             />
-            <Select value={selectedValue} onValueChange={handleSelect}>
-              <SelectTrigger className="absolute top-0.75 right-0.5 w-8 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] font-normal leading-4.5 text-[#A1A1AA] gap-0.5">
+            <Select value={stroke.unit} onValueChange={handleUnitChange}>
+              <SelectTrigger className="absolute top-0.75 right-0.5 w-10.75 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] font-normal leading-4.5 text-[#A1A1AA] gap-0.5">
                 <SelectValue placeholder="%" />
               </SelectTrigger>
               <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">
@@ -166,7 +156,7 @@ const StrokeField = ({
             <input
               ref={colorInputRef}
               type="color"
-              value={isValidHex(color) ? color : value}
+              value={isValidHex(stroke.color) ? stroke.color : "#000000"}
               onChange={(e) => handleColorSelection(e.target.value)}
               className="absolute h-0 w-0 opacity-0"
             />
@@ -177,14 +167,14 @@ const StrokeField = ({
               size="icon"
               onClick={() => colorInputRef.current?.click()}
               className="h-6 w-6 rounded-full border-2 border-[#3F3F46]"
-              style={{ backgroundColor: isValidHex(color) ? color : value }}
+              style={{ backgroundColor: stroke.color }}
             />
 
             {/* hex input */}
             <Input
-              value={color}
+              value={stroke.color}
               onChange={(e) => handleColorInput(e.target.value)}
-              onBlur={() => handleColorSelection(color)}
+              onBlur={() => handleColorSelection(stroke.color)}
               placeholder="#000000"
               className="uppercase w-17.75 h-7 text-[11.5px] font-normal leading-4.5 text-[#FAFAFA]"
             />

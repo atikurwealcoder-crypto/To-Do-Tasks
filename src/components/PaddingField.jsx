@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Input } from "./ui/input";
 import {
@@ -31,7 +31,7 @@ const popoverData = [
 
 const PaddingField = ({
   property = {},
-  value = 0,
+  value = {},
   onValueChange = () => {},
   onDisabledUpdate = () => {},
   onDelete = () => {},
@@ -58,74 +58,54 @@ const PaddingField = ({
     ...rest
   } = property || {};
 
-  const [inputValue, setInputValue] = useState(value ?? 0);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [padding, setPadding] = useState({
+    top: value?.top ?? 0,
+    right: value?.right ?? 0,
+    bottom: value?.bottom ?? 0,
+    left: value?.left ?? 0,
+    unit: value?.unit ?? "px",
+  });
   const [isDataValid, setIsDataValid] = useState(false);
 
-  const [unit, setUnit] = useState(selectedValue || "rem");
-  const [sides, setSides] = useState({
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  });
+  // helper to send data to HOC
+  const updatePadding = (next) => {
+    const updated = { ...padding, ...next };
+    setPadding(updated);
+    onValueChange(updated);
+  };
 
-  const handleSelect = (value) => {
-    setSelectedValue(value);
-    setUnit(value);
+  /** input display logic */
+  const inputDisplayValue = () => {
+    const { top, right, bottom, left } = padding;
+    const allSame = top === right && top === bottom && top === left;
+    const sideSame = top === bottom && left === right;
 
-    onValueChange({
-      unit: value,
-      ...sides,
+    if (allSame) return top;
+    if (sideSame) return `${top}, ${right}`;
+    return `${top}, ${right}, ${bottom}, ${left}`;
+  };
+
+  /** input handler → applies to all sides */
+  const handleInputChange = debounceFn((rawValue) => {
+    if (rawValue === "" || rawValue === "-") return;
+
+    const num = Number(rawValue);
+    if (isNaN(num)) return;
+
+    updatePadding({
+      top: num,
+      right: num,
+      bottom: num,
+      left: num,
     });
-  };
-
-  const increaseSide = (side) => {
-    setSides((prev) => {
-      const updated = {
-        ...prev,
-        [side]: prev[side] + 1,
-      };
-
-      onValueChange({
-        unit,
-        ...updated,
-      });
-
-      return updated;
-    });
-  };
-
-  const getInputDisplayValue = () => {
-    const { top, right, bottom, left } = sides;
-
-    const hasCustomSides = [top, right, bottom, left].some((v) => v !== 0);
-
-    if (hasCustomSides) {
-      return `${top},${right},${bottom},${left}`;
-    }
-
-    return inputValue;
-  };
-
-  const handleInput = debounceFn((rewValue) => {
-    if (rewValue === "" || rewValue === "-") return;
-
-    let currentValue = Number(rewValue);
-    if (isNaN(currentValue)) return;
-
-    if (min !== 0 || max !== 0) {
-      if (currentValue < min) currentValue = min;
-      if (currentValue > max) currentValue = max;
-      setInputValue(currentValue);
-      onValueChange(currentValue);
-      return;
-    }
-    setInputValue(currentValue);
-    onValueChange(currentValue);
   }, 150);
 
-  const hasCustomSides = Object.values(sides).some((v) => v !== 0);
+  /** popover side increment */
+  const increaseSide = (side) => {
+    updatePadding({
+      [side]: padding[side] + 1,
+    });
+  };
 
   return (
     <div className="w-88.75 h-7 p-0.5">
@@ -150,32 +130,29 @@ const PaddingField = ({
           </Tooltip>
         </div>
 
-        {/* right input + delete button */}
+        {/* right input and custom popover */}
         <div className="w-47.5 h-7 flex items-center gap-3">
           {/* input and custom popover */}
           <div className="flex items-center gap-2 w-41.5 h-7">
             <div className="relative">
-            {/* input field */}
+              {/* input field */}
               <Input
                 placeholder="Add Value"
                 className="flex items-center justify-center w-32.5 h-7 text-[11.5px] font-normal leading-4.5"
-                value={getInputDisplayValue()}
+                value={inputDisplayValue()}
                 min={min === 0 ? Infinity : min}
                 max={max === 0 ? Infinity : max}
                 type="text"
-                disabled={hasCustomSides}
-                onChange={(e) => {
-                  if (hasCustomSides) return;
-                  const value = e.target.value;
-                  setInputValue(value);
-                  handleInput(value);
-                }}
+                onChange={(e) => handleInputChange(e.target.value)}
               />
 
               {/* unit selection button */}
-              <Select value={selectedValue} onValueChange={handleSelect}>
-                <SelectTrigger className="absolute top-0.75 right-0.5 w-8 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] text-[#A1A1AA] gap-0.5">
-                  <SelectValue placeholder="rem" />
+              <Select
+                value={padding.unit}
+                onValueChange={(unit) => updatePadding({ unit })}
+              >
+                <SelectTrigger className="absolute top-0.75 right-0.5 w-10.75 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] text-[#A1A1AA] gap-0.5 items-center">
+                  <SelectValue placeholder={padding.unit} />
                 </SelectTrigger>
                 <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">
                   {fieldData.map((field, index) => (
@@ -191,16 +168,16 @@ const PaddingField = ({
               </Select>
             </div>
 
-            {/* custom padding selection popover button */}
+            {/* custom padding selection popover */}
             <Popover>
               <PopoverTrigger>
-                <Button className="w-7 h-7 rounded-md bg-[#3F3F46] px-0">
+                <div className="w-7 h-7 rounded-md bg-[#3F3F46] p-1 flex items-center justify-center cursor-pointer">
                   <HugeiconsIcon
                     icon={DashedLine02Icon}
                     color="#A1A1AA"
                     strokeWidth={1.5}
                   />
-                </Button>
+                </div>
               </PopoverTrigger>
               <PopoverContent>
                 <div className="w-57.5 h-35 bg-[#3F3F46] rounded-md p-3 grid grid-cols-2 gap-2.5">
@@ -221,12 +198,12 @@ const PaddingField = ({
                             strokeWidth={1.5}
                           />
                           <span className="text-[11.5px] font-normal leading-4.5">
-                            {sides[data.key]}
+                            {padding[data.key]}
                           </span>
                         </div>
                         <div>
                           <p className="text-[11.5px] font-normal leading-4.5">
-                            {unit}
+                            {padding.unit}
                           </p>
                         </div>
                       </Button>
