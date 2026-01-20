@@ -15,6 +15,12 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
 import { debounceFn } from "../lib/utils";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "./ui/input-group";
 
 const WidthHeightField = ({
   property = {},
@@ -109,7 +115,43 @@ const WidthHeightField = ({
 
         {/* right add + delete button */}
         <div className="flex items-center gap-3 w-38.5 h-7">
-          <div className="relative">
+          <InputGroup className="border-none bg-[#303033] w-32.5 h-7">
+            <InputGroupInput
+              placeholder="Add Value"
+              className="text-[11.5px] font-normal leading-4.5"
+              value={inputValue}
+              min={min === 0 ? Infinity : min}
+              max={max === 0 ? Infinity : max}
+              type="number"
+              onChange={(e) => {
+                const value = e.target.value;
+                setInputValue(value);
+                handleInput(value);
+              }}
+            />
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton className="hover:bg-transparent px-0 py-0">
+                <Select value={selectedUnit} onValueChange={handleSelect}>
+                  <SelectTrigger className="w-10.75 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] text-[#A1A1AA] gap-0.5">
+                    <SelectValue placeholder={selectedUnit} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">
+                    {fieldData.map((field, index) => (
+                      <SelectItem
+                        key={index}
+                        value={field.value}
+                        className="text-[#A1A1AA] focus:bg-[#27272A] focus:text-[#A1A1AA] w-10.5 h-5.5 pl-1.5 py-0.5 pr-0.5 text-[11.5px]"
+                      >
+                        {field.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
+          {/* <div className="relative">
             <Input
               placeholder="Add Value"
               className="flex items-center justify-center w-32.5 h-7 text-[11.5px] font-normal leading-4.5"
@@ -124,7 +166,7 @@ const WidthHeightField = ({
               }}
             />
             <Select value={selectedUnit} onValueChange={handleSelect}>
-              <SelectTrigger className="absolute top-0.75 right-0.5 w-10.75 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] text-[#A1A1AA] gap-0.5">
+              <SelectTrigger className="absolute top-0.75 right-0.75 w-10.75 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] text-[#A1A1AA] gap-0.5">
                 <SelectValue placeholder={selectedUnit} />
               </SelectTrigger>
               <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">
@@ -139,7 +181,7 @@ const WidthHeightField = ({
                 ))}
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
           {isCustomAnim && (
             <Button onClick={onDelete} className="has-[>svg]:px-0">
               <HugeiconsIcon

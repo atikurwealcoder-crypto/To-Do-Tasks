@@ -18,10 +18,11 @@ import WidthHeightField from "./components/WidthHeightField";
 import PaddingField from "./components/PaddingField";
 import StrokeField from "./components/StrokeField";
 import CodeblockField from "./components/CodeblockField";
+import DirectionField from "./components/DirectionField";
 
 function App() {
   return (
-    <div className="mt-10 max-w-110 mx-auto bg-black p-5 space-y-3">
+    <div className="mt-10 max-w-101.25 mx-auto bg-[#27272A] p-5 space-y-3">
       <Toaster richColors position="top-right" />
       {/* <SliderField /> */}
       {/* <RepeatField /> */}
@@ -36,7 +37,8 @@ function App() {
       <WidthHeightField />
       <PaddingField />
       <StrokeField />
-      <CodeblockField/>
+      <DirectionField />
+      <CodeblockField />
       {/* <GlobalSettingModal/> */}
       {/* <DynamicModal /> */}
       {/* <ModalInfoInputField /> */}

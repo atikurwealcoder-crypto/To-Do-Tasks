@@ -89,14 +89,26 @@ const PaddingField = ({
   const handleInputChange = debounceFn((rawValue) => {
     if (rawValue === "" || rawValue === "-") return;
 
-    const num = Number(rawValue);
-    if (isNaN(num)) return;
+    let currentValue = Number(rawValue);
+    if (isNaN(currentValue)) return;
+
+    if (min !== 0 || max !== 0) {
+      if (currentValue < min) currentValue = min;
+      if (currentValue > max) currentValue = max;
+      updatePadding({
+        top: currentValue,
+        right: currentValue,
+        bottom: currentValue,
+        left: currentValue,
+      });
+      return;
+    }
 
     updatePadding({
-      top: num,
-      right: num,
-      bottom: num,
-      left: num,
+      top: currentValue,
+      right: currentValue,
+      bottom: currentValue,
+      left: currentValue,
     });
   }, 150);
 
@@ -151,7 +163,7 @@ const PaddingField = ({
                 value={padding.unit}
                 onValueChange={(unit) => updatePadding({ unit })}
               >
-                <SelectTrigger className="absolute top-0.75 right-0.5 w-10.75 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] text-[#A1A1AA] gap-0.5 items-center">
+                <SelectTrigger className="absolute top-0.75 right-0.75 w-10.75 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] text-[#A1A1AA] gap-0.5 items-center">
                   <SelectValue placeholder={padding.unit} />
                 </SelectTrigger>
                 <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">

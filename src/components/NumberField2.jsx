@@ -24,7 +24,7 @@ const NumberField2 = ({
     isRequired = false,
     isCustomAnim = false,
     min = 0,
-    max = 0,
+    max = 2,
     step = 0.1,
     ...rest
   } = property || {};
@@ -104,7 +104,7 @@ const NumberField2 = ({
             <div className="flex items-center justify-between absolute w-12.25 right-2 top-1.25 bg-[#52525B] px-1 h-5.5 rounded-sm">
               <Button
                 size="icon"
-                onClick={() => updateValue(inputValue - config.step)}
+                onClick={() => updateValue(inputValue - step)}
               >
                 <HugeiconsIcon
                   icon={MinusSignIcon}
@@ -115,7 +115,7 @@ const NumberField2 = ({
 
               <Button
                 size="icon"
-                onClick={() => updateValue(inputValue + config.step)}
+                onClick={() => updateValue(inputValue + step)}
               >
                 <HugeiconsIcon icon={PlusSignIcon} className="text-[#E4E4E7]" />
               </Button>

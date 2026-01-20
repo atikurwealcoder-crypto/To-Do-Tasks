@@ -56,7 +56,7 @@ const StrokeField = ({
   // helper to send data to HOC
   const updateStroke = (next) => {
     const updatedValues = { ...stroke, ...next };
-    console.log(updatedValues)
+    console.log(updatedValues);
     setStroke(updatedValues);
     onValueChange(updatedValues);
   };
@@ -71,6 +71,14 @@ const StrokeField = ({
 
     let currentValue = Number(rewValue);
     if (isNaN(currentValue)) return;
+
+    if (min !== 0 || max !== 0) {
+      if (currentValue < min) currentValue = min;
+      if (currentValue > max) currentValue = max;
+      updateStroke({ size: currentValue });
+      return;
+    }
+
     updateStroke({ size: currentValue });
   }, 150);
 
@@ -134,7 +142,7 @@ const StrokeField = ({
               onChange={(e) => handleInputChange(e.target.value)}
             />
             <Select value={stroke.unit} onValueChange={handleUnitChange}>
-              <SelectTrigger className="absolute top-0.75 right-0.5 w-10.75 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] font-normal leading-4.5 text-[#A1A1AA] gap-0.5">
+              <SelectTrigger className="absolute top-0.75 right-0.75 w-10.75 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] font-normal leading-4.5 text-[#A1A1AA] gap-0.5">
                 <SelectValue placeholder="%" />
               </SelectTrigger>
               <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">
