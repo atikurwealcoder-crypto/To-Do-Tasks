@@ -36,7 +36,7 @@ const CodeblockField = ({
   };
 
   return (
-    <div className="w-88.75 h-25 space-y-3">
+    <div className="w-64 h-25 space-y-3">
       {/* Header */}
       <div className="w-full h-4.5 flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm">

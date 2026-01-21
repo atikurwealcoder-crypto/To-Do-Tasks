@@ -4,6 +4,7 @@ import { Input } from "./ui/input";
 import {
   Delete01Icon,
   InformationCircleIcon,
+  Settings03Icon,
 } from "@hugeicons/core-free-icons";
 import {
   Select,
@@ -12,6 +13,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
 import { debounceFn } from "../lib/utils";
@@ -66,7 +73,7 @@ const StrokeField = ({
     /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(value);
 
   // input size value handler
-  const handleInputChange = debounceFn((rewValue) => {
+  const handleInput = debounceFn((rewValue) => {
     if (rewValue === "" || rewValue === "-") return;
 
     let currentValue = Number(rewValue);
@@ -82,11 +89,12 @@ const StrokeField = ({
     updateStroke({ size: currentValue });
   }, 150);
 
+  // handle unit change
   const handleUnitChange = (unit) => {
     updateStroke({ unit });
   };
 
-  // handle input typing
+  // handle color input typing
   const handleColorInput = (rawColor) => {
     const inputColor = rawColor.toUpperCase();
     setStroke((prev) => ({
@@ -100,17 +108,17 @@ const StrokeField = ({
   // color picker handler
   const handleColorSelection = (rawColor) => {
     const selectedColor = rawColor.toUpperCase();
-
+    
     if (!isValidHex(selectedColor)) return;
 
     updateStroke({ color: selectedColor });
   };
 
   return (
-    <div className="w-88.75 h-7 p-0.5">
-      <div className="h-7 flex flex-col justify-between gap-[15.5px] mx-auto rounded-lg md:flex-row md:items-center">
+    <div className="w-64 h-7 p-0.5">
+      <div className="h-7 flex justify-between items-center rounded-lg">
         {/* left label + tooltip */}
-        <div className="w-16.5 h-4.5 flex items-center gap-1.5 text-[#E4E4E7]">
+        <div className="w-13.5 h-4.5 flex items-center gap-1.5 text-[#E4E4E7]">
           <h2 className="text-white text-[11.5px] font-normal leading-4.5">
             {title}
           </h2>
@@ -129,69 +137,88 @@ const StrokeField = ({
           </Tooltip>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* stroke value input and color picker */}
-          <div className="relative">
-            <Input
-              placeholder="Add Value"
-              className="flex items-center justify-center w-32.5 h-7 text-[11.5px] font-normal leading-4.5"
-              value={stroke.size}
-              min={min === 0 ? Infinity : min}
-              max={max === 0 ? Infinity : max}
-              type="number"
-              onChange={(e) => handleInputChange(e.target.value)}
-            />
-            <Select value={stroke.unit} onValueChange={handleUnitChange}>
-              <SelectTrigger className="absolute top-0.75 right-0.75 w-10.75 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#52525B] text-[11.5px] font-normal leading-4.5 text-[#A1A1AA] gap-0.5">
-                <SelectValue placeholder="%" />
-              </SelectTrigger>
-              <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">
-                {fieldData.map((field, index) => (
-                  <SelectItem
-                    key={index}
-                    value={field.value}
-                    className="text-[#A1A1AA] focus:bg-[#27272A] focus:text-[#A1A1AA] w-10.5 h-5.5 pl-1.5 py-0.5 pr-0.5 text-[11.5px] font-normal leading-4.5"
-                  >
-                    {field.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="w-12 h-7 flex items-center gap-2">
+          <Popover>
+            <PopoverTrigger>
+              <div className="w-7 h-7 rounded-md bg-[#303033] p-1 flex items-center justify-center cursor-pointer">
+                <HugeiconsIcon
+                  icon={Settings03Icon}
+                  color="#A1A1AA"
+                  strokeWidth={1.5}
+                  className="w-3.5 h-3.5"
+                />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent>
+              <div className="w-38.5 h-22 bg-[#303033] rounded-md p-3 flex flex-col gap-2">
+                <InputGroup className="border-none bg-[#18181B] w-32.5 h-7 has-[[data-slot=input-group-control]:focus-visible]:ring-0 has-[>[data-align=inline-end]]:[&>input]:pr-1">
+                  <InputGroupInput
+                    placeholder="Add Value"
+                    className="w-32.5 h-7 text-[11.5px] font-normal leading-4.5 bg-[#18181B] rounded-md"
+                    value={stroke.size}
+                    min={min === 0 ? Infinity : min}
+                    max={max === 0 ? Infinity : max}
+                    type="number"
+                    onChange={(e) => handleInput(e.target.value)}
+                  />
 
-          {/* color picker field */}
-          <div className="flex items-center gap-2">
-            <input
-              ref={colorInputRef}
-              type="color"
-              value={isValidHex(stroke.color) ? stroke.color : "#000000"}
-              onChange={(e) => handleColorSelection(e.target.value)}
-              className="absolute h-0 w-0 opacity-0"
-            />
+                  <InputGroupAddon align="inline-end" className="pr-2.5">
+                    <Select
+                      value={stroke.unit}
+                      onValueChange={handleUnitChange}
+                    >
+                      <SelectTrigger className="min-w-8 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#27272A] text-[11.5px] font-normal leading-4.5 text-[#A1A1AA] gap-0.5">
+                        <SelectValue placeholder="%" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">
+                        {fieldData.map((field, index) => (
+                          <SelectItem
+                            key={index}
+                            value={field.value}
+                            className="text-[#A1A1AA] focus:bg-[#27272A] focus:text-[#A1A1AA] w-10.5 h-5.5 pl-1.5 py-0.5 pr-0.5 text-[11.5px] font-normal leading-4.5"
+                          >
+                            {field.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </InputGroupAddon>
+                </InputGroup>
 
-            {/* swatch */}
-            <Button
-              type="button"
-              size="icon"
-              onClick={() => colorInputRef.current?.click()}
-              className="h-6 w-6 rounded-full border-2 border-[#3F3F46]"
-              style={{ backgroundColor: stroke.color }}
-            />
+                {/* color picker field */}
+                <div className="flex items-center gap-2">
+                  <input
+                    ref={colorInputRef}
+                    type="color"
+                    value={isValidHex(stroke.color) ? stroke.color : "#000000"}
+                    onChange={(e) => handleColorSelection(e.target.value)}
+                    className="absolute h-0 w-0 opacity-0"
+                  />
 
-            {/* hex input */}
-            <Input
-              value={stroke.color}
-              onChange={(e) => handleColorInput(e.target.value)}
-              onBlur={() => handleColorSelection(stroke.color)}
-              placeholder="#000000"
-              className="uppercase w-17.75 h-7 text-[11.5px] font-normal leading-4.5 text-[#FAFAFA]"
-            />
-          </div>
-        </div>
-        <div>
+                  {/* swatch */}
+                  <Button
+                    type="button"
+                    size="icon"
+                    onClick={() => colorInputRef.current?.click()}
+                    className="h-5.5 w-5.5 rounded-full border-2 border-[#303033]"
+                    style={{ backgroundColor: stroke.color }}
+                  />
+
+                  {/* hex input */}
+                  <Input
+                    value={stroke.color}
+                    onChange={(e) => handleColorInput(e.target.value)}
+                    onBlur={() => handleColorSelection(stroke.color)}
+                    placeholder="#000000"
+                    className="uppercase w-full h-7 text-[11.5px] font-normal leading-4.5 text-[#FAFAFA] bg-[#18181B]"
+                  />
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
           {/* delete button */}
           {isCustomAnim && (
-            <Button onClick={onDelete} className="has-[>svg]:px-0">
+            <Button onClick={onDelete} className="has-[>svg]:px-0 bg-transparent hover:bg-transparent cursor-pointer">
               <HugeiconsIcon
                 icon={Delete01Icon}
                 size={5}
@@ -200,6 +227,7 @@ const StrokeField = ({
             </Button>
           )}
         </div>
+
       </div>
 
       {/* required message */}
@@ -211,3 +239,4 @@ const StrokeField = ({
 };
 
 export default StrokeField;
+

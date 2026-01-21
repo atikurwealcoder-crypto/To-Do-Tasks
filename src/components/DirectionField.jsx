@@ -17,7 +17,7 @@ const DirectionField = (
   onDelete = () => {},
 ) => {
   const {
-    title = "Animation Direction",
+    title = "Direction",
     tooltipContent = "Choose animation direction",
     path = "",
     isRequired = false,
@@ -30,7 +30,7 @@ const DirectionField = (
   };
 
   return (
-    <div className="w-88.75 h-7 p-0.5">
+    <div className="w-64 h-7 p-0.5">
       <div className="flex flex-col justify-between mx-auto rounded-lg sm:flex-row sm:items-center">
         {/* left label + tooltip */}
         <div className="w-35.5 h-4.5 flex items-center gap-1.5">
@@ -63,7 +63,7 @@ const DirectionField = (
               <RadioGroupItem
                 value="drawin"
                 id="draw-in"
-                className="size-3.5 border-none bg-[#18181B] focus-visible:ring-0 focus-visible:border-none"
+                className="size-3.5 border-[#18181B] bg-[#18181B] focus-visible:ring-0 focus-visible:border-none   data-[state=checked]:text-[#2C76E6]"
               />
               <Label
                 htmlFor="draw-in"
@@ -76,7 +76,7 @@ const DirectionField = (
               <RadioGroupItem
                 value="drawout"
                 id="draw-out"
-                className="size-3.5 border-none bg-[#18181B] focus-visible:ring-0 focus-visible:border-none"
+                className="size-3.5 border-none bg-[#18181B] focus-visible:ring-0 focus-visible:border-none data-[state=checked]:text-[#2C76E6]"
               />
               <Label
                 htmlFor="draw-out"
@@ -88,7 +88,7 @@ const DirectionField = (
           </RadioGroup>
 
           {isCustomAnim && (
-            <Button onClick={onDelete} className="has-[>svg]:px-0">
+            <Button onClick={onDelete} className="has-[>svg]:px-0 bg-transparent hover:bg-transparent cursor-pointer">
               <HugeiconsIcon
                 icon={Delete01Icon}
                 className="text-[#A1A1AA] w-3 h-3"
