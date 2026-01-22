@@ -38,7 +38,7 @@ function App() {
       <PaddingField />
       <StrokeField />
       <DirectionField />
-      {/* <CodeblockField /> */}
+      <CodeblockField />
       {/* <GlobalSettingModal/> */}
       {/* <DynamicModal /> */}
       {/* <ModalInfoInputField /> */}

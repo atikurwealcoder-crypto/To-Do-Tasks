@@ -17,14 +17,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "./ui/input-group";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
 import { debounceFn } from "../lib/utils";
+import { buildBoxValues, parseBoxValues } from "../lib/cssValue";
 
 const popoverData = [
   { title: "Top", key: "top" },
@@ -62,20 +59,24 @@ const PaddingField = ({
     ...rest
   } = property || {};
 
-  const [padding, setPadding] = useState({
-    top: value?.top ?? 0,
-    right: value?.right ?? 0,
-    bottom: value?.bottom ?? 0,
-    left: value?.left ?? 0,
-    unit: value?.unit ?? "px",
+  const [padding, setPadding] = useState(() => {
+    const parsedValue = parseBoxValues(value, "padding", "px");
+    return {
+      top: parsedValue.top ?? 0,
+      right: parsedValue.right ?? 0,
+      bottom: parsedValue.bottom ?? 0,
+      left: parsedValue.left ?? 0,
+      unit: parsedValue.unit ?? "px",
+    };
   });
   const [isDataValid, setIsDataValid] = useState(false);
 
   // helper to send data to HOC
   const updatePadding = (next) => {
     const updatedValues = { ...padding, ...next };
+
     setPadding(updatedValues);
-    onValueChange(updatedValues);
+    onValueChange(buildBoxValues(updatedValues, "padding"));
   };
 
   /** input display logic */
@@ -88,7 +89,6 @@ const PaddingField = ({
     if (sideSame) return `${top}, ${right}`;
     return `${top}, ${right}, ${bottom}, ${left}`;
   };
-
 
   /** input handler → applies to all sides */
   const handleInput = debounceFn((rawValue) => {
@@ -117,10 +117,13 @@ const PaddingField = ({
     });
   }, 150);
 
-  /** popover side increment */
-  const increaseSide = (side) => {
+  /** popover side input value change handler */
+  const handleSideChange = (side) => (e) => {
+    const next = Number(e.target.value);
+    if (Number.isNaN(next)) return;
+
     updatePadding({
-      [side]: padding[side] + 1,
+      [side]: next,
     });
   };
 
@@ -203,27 +206,28 @@ const PaddingField = ({
                     <h1 className="text-[#E4E4E7] text-[11.5px] font-normal leading-4.5">
                       {data.title}
                     </h1>
-                    <Button
-                      onClick={() => increaseSide(data.key)}
-                      className="flex justify-between items-center bg-[#27272A] w-24.25 h-7 py-1.25 pl-2.5 pr-3 rounded-md text-[#A1A1AA]"
-                    >
-                      <div className="flex items-center gap-1.5">
+                    <InputGroup className="border-none bg-[#18181B] w-24.25 h-7 has-[[data-slot=input-group-control]:focus-visible]:ring-0 has-[>[data-align=inline-end]]:[&>input]:pr-1">
+                      <InputGroupInput
+                        value={padding[data.key]}
+                        onChange={handleSideChange(data.key)}
+                        type="number"
+                        className="text-[11.5px] font-normal leading-4.5"
+                      />
+                      <InputGroupAddon className="">
                         <HugeiconsIcon
                           icon={DashedLine02Icon}
                           size={24}
                           color="#A1A1AA"
                           strokeWidth={1.5}
                         />
-                        <span className="text-[11.5px] font-normal leading-4.5">
-                          {padding[data.key]}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="text-[11.5px] font-normal leading-4.5">
-                          {padding.unit}
-                        </p>
-                      </div>
-                    </Button>
+                      </InputGroupAddon>
+                      <InputGroupAddon
+                        align="inline-end"
+                        className="text-[11.5px] font-normal leading-4.5 text-[#A1A1AA]"
+                      >
+                        {padding.unit}
+                      </InputGroupAddon>
+                    </InputGroup>
                   </div>
                 ))}
               </div>

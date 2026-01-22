@@ -1,4 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import Editor from "react-simple-code-editor";
+import Prism from "prismjs";
+
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-css";
+import "prismjs/themes/prism-tomorrow.css";
+
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
@@ -6,7 +13,9 @@ import {
   Delete01Icon,
 } from "@hugeicons/core-free-icons";
 import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
+import { debounceFn } from "../lib/utils";
+
+// TODO:I have used react-simple-code-editor and prismjs package for this component.
 
 const CodeblockField = ({
   property = {},
@@ -17,29 +26,33 @@ const CodeblockField = ({
 }) => {
   const {
     title = "Custom",
-    tooltipContent = "Enter the value.",
+    tooltipContent = "Enter JS or CSS code",
+    placeholder = "x:1, y:2",
+    language = "javascript",
     isRequired = false,
     isCustomAnim = true,
     ...rest
   } = property || {};
 
-  const [code, setCode] = useState(value);
+  const [code, setCode] = useState(value ?? "");
 
-  // optional: sync if HOC changes value
-  useEffect(() => {
-    setCode(value || "");
-  }, [value]);
+  const handleChange = debounceFn((newCode) => {
+    setCode(newCode);
+    onValueChange(newCode);
+  });
 
-  const commitValue = (raw) => {
-    setCode(raw);
-    onValueChange(raw);
+  const highlightCode = (code) => {
+    const grammar =
+      language === "css" ? Prism.languages.css : Prism.languages.javascript;
+
+    return Prism.highlight(code, grammar, language);
   };
 
   return (
-    <div className="w-64 h-25 space-y-3">
+    <div className="w-64 space-y-3">
       {/* Header */}
       <div className="w-full h-4.5 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-2">
           <span className="text-white text-[11.5px] font-normal leading-4.5">
             {title}
           </span>
@@ -60,30 +73,35 @@ const CodeblockField = ({
         </div>
 
         {isCustomAnim && (
-          <Button onClick={onDelete} className="has-[>svg]:px-0">
+          <Button
+            onClick={onDelete}
+            className="has-[>svg]:px-0 bg-transparent hover:bg-transparent"
+          >
             <HugeiconsIcon
               icon={Delete01Icon}
-              size={5}
               className="text-[#A1A1AA] w-5 h-5"
             />
           </Button>
         )}
-    
       </div>
 
-      {/* Code block */}
-      <Textarea
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
-        onBlur={() => commitValue(code)}
-        placeholder="x:1, y:2"
-        spellCheck={false}
-        className="w-full min-h-17.5 resize-none bg-[#3F3F46] text-[#FAFAFA] text-[11.5px] font-normal leading-4.5 px-2.5 py-1.25 outline-none placeholder:text-[#A1A1AA]"
-      />
+      {/* Code Editor */}
+      <div className="rounded-md bg-[#303033] overflow-hidden">
+        <Editor
+          value={code}
+          placeholder={placeholder}
+          onValueChange={handleChange}
+          highlight={highlightCode}
+          padding={10}
+          textareaId="codeblock-editor"
+          spellCheck={false}
+          className="w-full min-h-17.5 text-[11.5px] leading-4.5 text-[#FAFAFA] bg-[#303033]"
+        />
+      </div>
 
       {/* required message */}
-      {isRequired && isDataValid && (
-        <p className="text-white text-sm">Field is Required</p>
+      {isRequired && !code && (
+        <p className="text-red-400 text-xs">Field is Required</p>
       )}
     </div>
   );

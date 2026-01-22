@@ -22,6 +22,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
 import { debounceFn } from "../lib/utils";
+import { buildStrokeValues, parseStrokeValues } from "../lib/cssValue";
 
 const StrokeField = ({
   property = {},
@@ -52,10 +53,13 @@ const StrokeField = ({
     ...rest
   } = property || {};
 
-  const [stroke, setStroke] = useState({
-    size: value?.size ?? 0,
-    unit: value?.unit ?? "px",
-    color: value?.color ?? "#000000",
+  const [stroke, setStroke] = useState(() => {
+    const parsedValue = parseStrokeValues(value, "px");
+    return {
+      size: parsedValue.size ?? 0,
+      unit: parsedValue.unit ?? "px",
+      color: parsedValue.color ?? "#000000",
+    };
   });
   const [isDataValid, setIsDataValid] = useState(false);
   const colorInputRef = useRef(null);
@@ -63,9 +67,8 @@ const StrokeField = ({
   // helper to send data to HOC
   const updateStroke = (next) => {
     const updatedValues = { ...stroke, ...next };
-    console.log(updatedValues);
     setStroke(updatedValues);
-    onValueChange(updatedValues);
+    onValueChange(buildStrokeValues(updatedValues));
   };
 
   // hex code validation
@@ -91,7 +94,7 @@ const StrokeField = ({
 
   // handle unit change
   const handleUnitChange = (unit) => {
-    updateStroke({ unit });
+    updateStroke({ unit: unit });
   };
 
   // handle color input typing
@@ -101,14 +104,13 @@ const StrokeField = ({
       ...prev,
       color: inputColor,
     }));
-    // console.log(rawColor);
     updateStroke({ color: inputColor });
   };
 
   // color picker handler
   const handleColorSelection = (rawColor) => {
     const selectedColor = rawColor.toUpperCase();
-    
+
     if (!isValidHex(selectedColor)) return;
 
     updateStroke({ color: selectedColor });
@@ -167,7 +169,7 @@ const StrokeField = ({
                       value={stroke.unit}
                       onValueChange={handleUnitChange}
                     >
-                      <SelectTrigger className="min-w-8 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#27272A] text-[11.5px] font-normal leading-4.5 text-[#A1A1AA] gap-0.5">
+                      <SelectTrigger className="min-w-8 data-[size=default]:h-5.5 pl-1.5 py-0.5 pr-0.5 bg-[#303033] text-[11.5px] font-normal leading-4.5 text-[#A1A1AA] gap-0.5">
                         <SelectValue placeholder="%" />
                       </SelectTrigger>
                       <SelectContent className="bg-[#3F3F46] w-11.5 h-50.5 p-0.5 rounded-md">
@@ -218,7 +220,10 @@ const StrokeField = ({
           </Popover>
           {/* delete button */}
           {isCustomAnim && (
-            <Button onClick={onDelete} className="has-[>svg]:px-0 bg-transparent hover:bg-transparent cursor-pointer">
+            <Button
+              onClick={onDelete}
+              className="has-[>svg]:px-0 bg-transparent hover:bg-transparent cursor-pointer"
+            >
               <HugeiconsIcon
                 icon={Delete01Icon}
                 size={5}
@@ -227,7 +232,6 @@ const StrokeField = ({
             </Button>
           )}
         </div>
-
       </div>
 
       {/* required message */}
@@ -239,4 +243,3 @@ const StrokeField = ({
 };
 
 export default StrokeField;
-

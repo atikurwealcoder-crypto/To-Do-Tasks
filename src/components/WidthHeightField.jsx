@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import {
   Delete01Icon,
@@ -15,10 +15,11 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./ui/button";
 import { debounceFn } from "../lib/utils";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
+import { parseCssValue, toCssValue } from "../lib/cssValue";
 
 const WidthHeightField = ({
   property = {},
-  value = {},
+  value = "",
   onValueChange = () => {},
   onDisabledUpdate = () => {},
   onDelete = () => {},
@@ -45,17 +46,24 @@ const WidthHeightField = ({
     ...rest
   } = property || {};
 
-  const [inputValue, setInputValue] = useState(value?.value ?? 0);
-  const [selectedUnit, setSelectedUnit] = useState(value?.unit ?? "px");
+  const [inputValue, setInputValue] = useState(0);
+  const [selectedUnit, setSelectedUnit] = useState("px");
   const [isDataValid, setIsDataValid] = useState(false);
+
+  // sync incoming value
+  useEffect(() => {
+    const parsedValue = parseCssValue(value, "px");
+
+    setInputValue(parsedValue?.value);
+    setSelectedUnit(parsedValue?.unit);
+  }, [value]);
 
   // helper function to send data to HOC
   const updateValue = (next = {}) => {
-    const updatedValues = {
-      value: next?.value ?? inputValue ?? 0,
-      unit: next?.unit ?? selectedUnit ?? "px",
-    };
-    onValueChange({ updatedValues });
+    const nextValue = next.value ?? inputValue ?? 0;
+    const nextUnit = next.unit ?? selectedUnit ?? "px";
+    
+    onValueChange(toCssValue(nextValue, nextUnit));
   };
 
   // input value handler
@@ -80,7 +88,7 @@ const WidthHeightField = ({
   // unit select handler
   const handleSelect = (unit) => {
     setSelectedUnit(unit);
-    updateValue({ unit: unit });
+    updateValue({ unit });
   };
 
   return (
