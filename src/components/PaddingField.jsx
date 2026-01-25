@@ -75,6 +75,7 @@ const PaddingField = ({
   const updatePadding = (next) => {
     const updatedValues = { ...padding, ...next };
 
+    console.log(updatedValues)
     setPadding(updatedValues);
     onValueChange(buildBoxValues(updatedValues, "padding"));
   };

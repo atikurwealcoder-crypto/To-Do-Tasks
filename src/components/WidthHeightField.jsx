@@ -62,7 +62,6 @@ const WidthHeightField = ({
   const updateValue = (next = {}) => {
     const nextValue = next.value ?? inputValue ?? 0;
     const nextUnit = next.unit ?? selectedUnit ?? "px";
-    
     onValueChange(toCssValue(nextValue, nextUnit));
   };
 
