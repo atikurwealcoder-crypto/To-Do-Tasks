@@ -95,7 +95,7 @@ const CodeblockField = ({
           padding={10}
           textareaId="codeblock-editor"
           spellCheck={false}
-          className="w-full min-h-17.5 text-[11.5px] leading-4.5 text-[#FAFAFA] bg-[#303033]"
+          className="w-full min-h-10 max-h-15 overflow-y-auto text-[11.5px] leading-4.5 text-[#FAFAFA] bg-[#303033]"
         />
       </div>
 

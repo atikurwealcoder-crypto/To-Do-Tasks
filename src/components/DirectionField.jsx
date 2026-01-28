@@ -63,7 +63,7 @@ const DirectionField = (
               <RadioGroupItem
                 value="drawin"
                 id="draw-in"
-                className="size-3.5 border-[#18181B] bg-[#18181B] focus-visible:ring-0 focus-visible:border-none   data-[state=checked]:text-[#2C76E6]"
+                className="size-3.5 border-[#18181B] bg-[#18181B] focus-visible:ring-0 focus-visible:border-none data-[state=checked]:text-[#2C76E6]"
               />
               <Label
                 htmlFor="draw-in"

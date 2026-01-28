@@ -28,7 +28,6 @@ export const toCssValue = (value, unit) => {
     }
 
     const cssValue = `${value}${unit}`;
-    console.log(cssValue)
     return cssValue;
 };
 

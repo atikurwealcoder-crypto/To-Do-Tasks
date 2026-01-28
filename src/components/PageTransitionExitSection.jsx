@@ -115,7 +115,7 @@ const PageTransitionExitSection = () => {
                         key={item.key}
                         disabled={isAdded}
                         onClick={() => addProperty(item.key)}
-                        className={`w-full text-left items-center cursor-pointer text-sm
+                        className={`w-full flex gap-2 text-left items-center cursor-pointer text-sm
                           ${
                             isAdded
                               ? "opacity-60 cursor-not-allowed"
@@ -124,12 +124,12 @@ const PageTransitionExitSection = () => {
                       >
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button>
+                            <div>
                               <HugeiconsIcon
                                 icon={InformationCircleFreeIcons}
                                 className="w-2.5 h-2.5"
                               />
-                            </Button>
+                            </div>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>tooltip</p>

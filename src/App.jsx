@@ -22,7 +22,7 @@ import DirectionField from "./components/DirectionField";
 
 function App() {
   return (
-    <div className="mt-10 max-w-71.5 mx-auto bg-[#27272A] p-3.75 space-y-3">
+    <div className="mt-10 max-w-71.5 mx-auto  p-3.75 space-y-3">
       <Toaster richColors position="top-right" />
       {/* <SliderField /> */}
       {/* <RepeatField /> */}
@@ -34,12 +34,12 @@ function App() {
       {/* <ClassSelectionField /> */}
       {/* <NumberField2 /> */}
       {/* <ColorPickerField /> */}
-      <WidthHeightField />
+      {/* <WidthHeightField />
       <PaddingField />
       <StrokeField />
       <DirectionField />
-      <CodeblockField />
-      {/* <GlobalSettingModal/> */}
+      <CodeblockField /> */}
+      <GlobalSettingModal/>
       {/* <DynamicModal /> */}
       {/* <ModalInfoInputField /> */}
       {/* <ModalInfoTextAreaField /> */}

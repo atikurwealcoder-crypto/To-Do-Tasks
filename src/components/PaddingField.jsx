@@ -74,10 +74,11 @@ const PaddingField = ({
   // helper to send data to HOC
   const updatePadding = (next) => {
     const updatedValues = { ...padding, ...next };
-
-    console.log(updatedValues)
     setPadding(updatedValues);
-    onValueChange(buildBoxValues(updatedValues, "padding"));
+
+    const result = buildBoxValues(updatedValues, "padding")
+    console.log(result)
+    onValueChange(result);
   };
 
   /** input display logic */
